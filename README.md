@@ -21,9 +21,9 @@ Polyglot V3 running on a [Polisy](https://www.universal-devices.com/product/poli
 The settings for this node are:
 
 #### Short Poll
-   * How often to poll for energy data (in seconds)
+   * How often to poll for current energy data (in seconds)
 #### Long Poll
-   * Not used
+   * How often to poll for daily energy data (in seconds)
 #### Custom Parameters
 	* username - your emporia VUE account user name
 	* password - your emporia VUE account password
