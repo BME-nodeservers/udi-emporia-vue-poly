@@ -40,24 +40,23 @@ class Controller(udi_interface.Node):
             return
 
         usage = self.vue.get_devices_usage(self.deviceList, None,
-                scale=pyemvue.enums.Scale.MINUTE.value,
+                scale=pyemvue.enums.Scale.SECOND.value,
                 unit=pyemvue.enums.Unit.KWH.value)
 
-        # usage is a list?
-        for chan in usage:
-            LOGGER.debug('usage = {} {} -- {} kwh'.format(
-                chan.device_gid,
-                chan.channel_num,
-                chan.usage))
-            self.setDriver('TPW', chan.usage)
+        kwh = round(usage[0].usage * 3600, 4)
+        #LOGGER.debug('Second = {}'.format(kwh))
+        self.setDriver('TPW', kwh, True, False)
 
+
+    def query_day(self):
         # Daily total?
         usage = self.vue.get_devices_usage(self.deviceList, None,
                 scale=pyemvue.enums.Scale.DAY.value,
                 unit=pyemvue.enums.Unit.KWH.value)
 
-        self.setDriver('GV1', usage[0].usage)
+        LOGGER.debug('Daily = {}'.format(round(usage[0].usage,4)))
 
+        self.setDriver('GV1', round(usage[0].usage, 4), True, True)
         
 
 
@@ -66,6 +65,14 @@ class Controller(udi_interface.Node):
         self.deviceList = []
         for device in dev_list:
             self.deviceList.append(device.device_gid)
+            self.vue.populate_device_properties(device)
+            LOGGER.info('Device Info:  {}  {}  {}  {}  {}  {}'.format(
+                device.device_gid,
+                device.manufacturer_id,
+                device.model,
+                device.firmware,
+                device.device_name,
+                device.usage_cent_per_kw_hour))
 
     # Process changes to customParameters
     def parameterHandler(self, params):
@@ -114,10 +121,13 @@ class Controller(udi_interface.Node):
 
         if self.configured:
             self.query()
+            self.query_day()
 
     def poll(self, poll):
         if poll == 'shortPoll':
             self.query()
+        else:
+            self.query_day()
 
     def delete(self):
         LOGGER.info('Removing node server')
