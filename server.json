@@ -8,7 +8,7 @@
     "notice": "",
     "shortPoll": "600",
     "longPoll": "3600",
-    "profile_version": "2.0.0",
+    "profile_version": "1.0.0",
     "customParams": {
 	    "Username" : "",
 	    "Password" : ""
@@ -21,7 +21,7 @@
     	"source": "https://github.com/BME-nodeservers/udi-emporia-vue-poly",
 	    "license": "https://github.com/BME-nodeservers/udi-emporia-vue-poly/LICENSE"
 	} ],
-	"store": {
+    "store": {
 		"developer": "bpaauwe@bobsplace.com",
 		"purchaseOptions": [
 			{
