@@ -1,0 +1,37 @@
+{
+    "name": "VUE",
+    "docs": "https://github.com/BME-nodeservers/udi-emporia-vue-poly",
+    "type": "python3",
+    "executable": "vue.py",
+    "install": "install.sh",
+    "description": "Smart Home Energy Montior",
+    "notice": "",
+    "shortPoll": "600",
+    "longPoll": "3600",
+    "profile_version": "2.0.0",
+    "credits": [ {
+	"customParams": {
+	},
+	"title": "emporia VUE: a node server for energy meter monitoring",
+    	"author": "Bob Paauwe",
+    	"version": "1.0.0",
+    	"date": "May 24, 2021",
+    	"source": "https://github.com/BME-nodeservers/udi-emporia-vue-poly",
+	    "license": "https://github.com/BME-nodeservers/udi-emporia-vue-poly/LICENSE"
+	} ],
+	"store": {
+		"developer": "bpaauwe@bobsplace.com",
+		"purchaseOptions": [
+			{
+				"isTrial": true,
+				"recurring": 30,
+				"recurringPeriod": "day",
+				"price": 0
+			},
+			{
+				"isPerpetual": true,
+				"price": 5.00
+			}
+		]
+	}
+}

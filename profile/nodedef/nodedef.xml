@@ -1,0 +1,15 @@
+<nodeDefs>
+	<nodeDef id="controller" nodeType="139" nls="ctl">
+		<editors />
+		<sts>
+			<st id="ST" editor="bool" />
+			<st id="TWP" editor="kwh" />
+		</sts>
+		<cmds>
+			<sends />
+			<accepts>
+				<cmd id="QUERY" />
+			</accepts>
+		</cmds>
+	</nodeDef>
+</nodeDefs>

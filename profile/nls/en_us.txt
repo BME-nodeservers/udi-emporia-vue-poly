@@ -1,0 +1,5 @@
+ND-controller-NAME = emporia VUE
+ND-controler-ICON = Electricity
+CMD-ctl-QUERY-NAME = Query
+ST-ctl-ST-NAME = Online
+ST-ctl-TPW-NAME = Killowatt Hours Today
