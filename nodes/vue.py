@@ -23,6 +23,7 @@ class Controller(udi_interface.Node):
         self.configured = False
         self.force = True
         self.vue = None
+        self.deviceList = []
 
         self.Parameters = Custom(polyglot, 'customparams')
         self.Notices = Custom(polyglot, 'notices')
@@ -35,16 +36,36 @@ class Controller(udi_interface.Node):
         self.poly.addNode(self)
 
     def query(self):
-        LOGGER.debug('Get some data here')
-        dev_list = view.get_devices()
-        LOGGER.debug('list of devices = {}'.format(dev_list))
+        if not self.configured:
+            return
 
-        gids = []
+        usage = self.vue.get_devices_usage(self.deviceList, None,
+                scale=pyemvue.enums.Scale.MINUTE.value,
+                unit=pyemvue.enums.Unit.KWH.value)
+
+        # usage is a list?
+        for chan in usage:
+            LOGGER.debug('usage = {} {} -- {} kwh'.format(
+                chan.device_gid,
+                chan.channel_num,
+                chan.usage))
+            self.setDriver('TPW', chan.usage)
+
+        # Daily total?
+        usage = self.vue.get_devices_usage(self.deviceList, None,
+                scale=pyemvue.enums.Scale.DAY.value,
+                unit=pyemvue.enums.Unit.KWH.value)
+
+        self.setDriver('GV1', usage[0].usage)
+
+        
+
+
+    def getDeviceId(self):
+        dev_list = self.vue.get_devices()
+        self.deviceList = []
         for device in dev_list:
-            gids.append(device.device_gid)
-
-        usage = vue.get_devices_usage(gids, None, scale=pyemvue.Scale.DAY.value, units=pyemuve.Unit.KWH.value)
-        LOGGER.debug('usage = {}'.format(usage))
+            self.deviceList.append(device.device_gid)
 
     # Process changes to customParameters
     def parameterHandler(self, params):
@@ -77,8 +98,9 @@ class Controller(udi_interface.Node):
             self.Notices['cfg_p'] = 'Please enter a valid Password'
 
         if self.configured:
-            vue = pyemvue.PyEmVue()
-            vue.login(username=self.Parameters['Username'], password=self.Parameters['Password'])
+            self.vue = pyemvue.PyEmVue()
+            self.vue.login(username=self.Parameters['Username'], password=self.Parameters['Password'])
+            self.getDeviceId()
 
     def start(self):
         LOGGER.info('Starting node server')
@@ -109,7 +131,8 @@ class Controller(udi_interface.Node):
 
     drivers = [
             {'driver': 'ST', 'value': 1, 'uom': 2},    # node server status
-            {'driver': 'TWP', 'value': 0, 'uom': 33},  # power
+            {'driver': 'TPW', 'value': 0, 'uom': 33},  # power
+            {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
             ]
 
     

@@ -19,7 +19,7 @@
     	"version": "1.0.0",
     	"date": "May 24, 2021",
     	"source": "https://github.com/BME-nodeservers/udi-emporia-vue-poly",
-	    "license": "https://github.com/BME-nodeservers/udi-emporia-vue-poly/LICENSE"
+	"license": "https://github.com/BME-nodeservers/udi-emporia-vue-poly/LICENSE"
 	} ],
     "store": {
 		"developer": "bpaauwe@bobsplace.com",

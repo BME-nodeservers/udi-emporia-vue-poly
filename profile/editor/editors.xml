@@ -4,6 +4,6 @@
 	</editor>
 
 	<editor id="kwh">
-		<range uom="33" min="-100000" max="100000" prec="1" />
+		<range uom="33" min="-100000" max="100000" prec="4" />
 	</editor>
 <editors>

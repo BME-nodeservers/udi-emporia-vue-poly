@@ -3,7 +3,8 @@
 		<editors />
 		<sts>
 			<st id="ST" editor="bool" />
-			<st id="TWP" editor="kwh" />
+			<st id="TPW" editor="kwh" />
+			<st id="GV1" editor="kwh" />
 		</sts>
 		<cmds>
 			<sends />
