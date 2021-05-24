@@ -15,7 +15,7 @@ if __name__ == "__main__":
     try:
         polyglot = udi_interface.Interface([vue.Controller])
         polyglot.start()
-        control = purpleair.Controller(polyglot, "controller", "controller", "emporia VUE")
+        control = vue.Controller(polyglot, "controller", "controller", "emporia VUE")
         polyglot.runForever()
     except (KeyboardInterrupt, SystemExit):
         sys.exit(0)
