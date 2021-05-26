@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Polyglot v3 node server Purple Air data
+Polyglot v3 node server emporia VUE 
 Copyright (C) 2021 Robert Paauwe
 """
 
