@@ -41,5 +41,7 @@ The settings for this node are:
 
 # Release Notes
 
+- 1.0.1 07/29/2021
+   - Use newer udi_interface and testing
 - 1.0.0 05/24/2021
    - Initial version.
