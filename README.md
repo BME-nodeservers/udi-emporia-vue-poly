@@ -41,6 +41,8 @@ The settings for this node are:
 
 # Release Notes
 
+- 1.0.2 03/15/2022
+   - lock down to version of pyemvue as newer versions don't work
 - 1.0.1 07/29/2021
    - Use newer udi_interface and testing
 - 1.0.0 05/24/2021
