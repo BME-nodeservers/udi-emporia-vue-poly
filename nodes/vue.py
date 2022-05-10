@@ -39,13 +39,16 @@ class Controller(udi_interface.Node):
         if not self.configured:
             return
 
-        usage = self.vue.get_devices_usage(self.deviceList, None,
+        usage = self.vue.get_device_list_usage(self.deviceList, None,
                 scale=pyemvue.enums.Scale.SECOND.value,
                 unit=pyemvue.enums.Unit.KWH.value)
 
-        kwh = round(usage[0].usage * 3600, 4)
-        #LOGGER.debug('Second = {}'.format(kwh))
-        self.setDriver('TPW', kwh, True, False)
+        for gid, device in usage.items():
+            for channelnum, channel in device.channels.items():
+                if channel.name == 'Main':
+                    kwh = round(channel.usage * 3600, 4)
+                    #LOGGER.debug('Second = {}'.format(kwh))
+                    self.setDriver('TPW', kwh, True, False)
 
 
     def query_day(self):
