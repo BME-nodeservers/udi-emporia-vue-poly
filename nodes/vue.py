@@ -33,19 +33,22 @@ class Controller(udi_interface.Node):
         self.poly.subscribe(self.poly.POLL, self.poll)
 
         self.poly.ready()
-        self.poly.addNode(self)
+        self.poly.addNode(self, conn_status="ST")
 
     def query(self):
         if not self.configured:
             return
 
-        usage = self.vue.get_devices_usage(self.deviceList, None,
+        usage = self.vue.get_device_list_usage(self.deviceList, None,
                 scale=pyemvue.enums.Scale.SECOND.value,
                 unit=pyemvue.enums.Unit.KWH.value)
 
-        kwh = round(usage[0].usage * 3600, 4)
-        #LOGGER.debug('Second = {}'.format(kwh))
-        self.setDriver('TPW', kwh, True, False)
+        for gid, device in usage.items():
+            for channelnum, channel in device.channels.items():
+                if channel.name == 'Main':
+                    kwh = round(channel.usage * 3600, 4)
+                    #LOGGER.debug('Second = {}'.format(kwh))
+                    self.setDriver('TPW', kwh, True, False)
 
 
     def query_day(self):
@@ -89,25 +92,30 @@ class Controller(udi_interface.Node):
 
         # Check for username and password
         self.Notices.clear()
+        self.configured = False
+
         for p in self.Parameters:
-            self.configured = True
             if p == 'Username' and self.Parameters[p] != '': 
                 valid_u = True
             if p == 'Password' and self.Parameters[p] != '': 
                 valid_p = True
 
         if not valid_u:
-            self.configured = False
             self.Notices['cfg_u'] = 'Please enter a valid Username'
 
         if not valid_p:
-            self.configured = False
             self.Notices['cfg_p'] = 'Please enter a valid Password'
 
-        if self.configured:
-            self.vue = pyemvue.PyEmVue()
-            self.vue.login(username=self.Parameters['Username'], password=self.Parameters['Password'])
-            self.getDeviceId()
+        if valid_u and valid_p:
+            LOGGER.info('Attempting to log into PyEmVue...')
+            try:
+                self.vue = pyemvue.PyEmVue()
+                self.vue.login(username=self.Parameters['Username'], password=self.Parameters['Password'])
+                self.getDeviceId()
+                self.configured = True
+            except Exception as e:
+                LOGGER.error('Failed to connect to VUE: {}'.format(e))
+                self.Notices['error'] = '{}'.format(e)
 
     def start(self):
         LOGGER.info('Starting node server')

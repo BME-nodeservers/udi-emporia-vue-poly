@@ -1,2 +1,8 @@
-udi_interface >= 3.0.8
-pyemvue == 0.12.3
+udi_interface >= 3.0.44
+python-jose >= 3.3.0
+#pyemvue == 0.12.3
+#pyemvue == 0.14.1
+# requirements for pyemvue
+warrant==0.6.1
+python-dateutil==2.8.2
+requests==2.26.0
