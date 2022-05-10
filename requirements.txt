@@ -1,2 +1,2 @@
-udi_interface >= 3.0.8
-pyemvue >= 0.12.3
+udi_interface >= 3.0.44
+pyemvue >= 0.15.1
