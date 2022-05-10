@@ -112,6 +112,7 @@ class Controller(udi_interface.Node):
                 self.configured = True
             except Exception as e:
                 LOGGER.error('Failed to connect to VUE: {}'.format(e))
+                self.Notices['error'] = e
 
     def start(self):
         LOGGER.info('Starting node server')
