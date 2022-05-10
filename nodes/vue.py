@@ -33,7 +33,7 @@ class Controller(udi_interface.Node):
         self.poly.subscribe(self.poly.POLL, self.poll)
 
         self.poly.ready()
-        self.poly.addNode(self)
+        self.poly.addNode(self, conn_status="ST")
 
     def query(self):
         if not self.configured:

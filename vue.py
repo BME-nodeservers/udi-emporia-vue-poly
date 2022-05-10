@@ -14,7 +14,7 @@ LOGGER = udi_interface.LOGGER
 if __name__ == "__main__":
     try:
         polyglot = udi_interface.Interface([vue.Controller])
-        polyglot.start()
+        polyglot.start('1.0.3')
         control = vue.Controller(polyglot, "controller", "controller", "emporia VUE")
         polyglot.runForever()
     except (KeyboardInterrupt, SystemExit):
