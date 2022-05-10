@@ -89,25 +89,29 @@ class Controller(udi_interface.Node):
 
         # Check for username and password
         self.Notices.clear()
+        self.configured = False
+
         for p in self.Parameters:
-            self.configured = True
             if p == 'Username' and self.Parameters[p] != '': 
                 valid_u = True
             if p == 'Password' and self.Parameters[p] != '': 
                 valid_p = True
 
         if not valid_u:
-            self.configured = False
             self.Notices['cfg_u'] = 'Please enter a valid Username'
 
         if not valid_p:
-            self.configured = False
             self.Notices['cfg_p'] = 'Please enter a valid Password'
 
-        if self.configured:
-            self.vue = pyemvue.PyEmVue()
-            self.vue.login(username=self.Parameters['Username'], password=self.Parameters['Password'])
-            self.getDeviceId()
+        if valid_u and valid_p:
+            LOGGER.info('Attempting to log into PyEmVue...')
+            try:
+                self.vue = pyemvue.PyEmVue()
+                self.vue.login(username=self.Parameters['Username'], password=self.Parameters['Password'])
+                self.getDeviceId()
+                self.configured = True
+            except Exception as e:
+                LOGGER.error('Failed to connect to VUE: {}'.format(e))
 
     def start(self):
         LOGGER.info('Starting node server')
