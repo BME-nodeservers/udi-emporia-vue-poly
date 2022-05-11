@@ -46,9 +46,10 @@ class Controller(udi_interface.Node):
         for gid, device in usage.items():
             for channelnum, channel in device.channels.items():
                 if channel.name == 'Main':
-                    kwh = round(channel.usage * 3600, 4)
-                    #LOGGER.debug('Second = {}'.format(kwh))
-                    self.setDriver('TPW', kwh, True, False)
+                    if channel.usage:
+                        kwh = round(channel.usage * 3600, 4)
+                        #LOGGER.debug('Second = {}'.format(kwh))
+                        self.setDriver('TPW', kwh, True, False)
 
 
     def query_day(self):
@@ -60,9 +61,10 @@ class Controller(udi_interface.Node):
         for gid, device in usage.items():
             for channelnum, channel in device.channels.items():
                 if channel.name == 'Main':
-                    kwh = round(channel.usage, 4)
-                    LOGGER.debug('Daily = {}'.format(kwh))
-                    self.setDriver('GV1', kwh, True, False)
+                    if channel.usage:
+                        kwh = round(channel.usage, 4)
+                        LOGGER.debug('Daily = {}'.format(kwh))
+                        self.setDriver('GV1', kwh, True, False)
 
     def getDeviceId(self):
         dev_list = self.vue.get_devices()
