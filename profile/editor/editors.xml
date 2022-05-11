@@ -1,6 +1,6 @@
 <editors>
 	<editor id="bool">
-		<range uom="2" subset="0,1" />
+		<range uom="25" subset="0,1,2" nls="STATUS" />
 	</editor>
 
 	<editor id="kwh">
