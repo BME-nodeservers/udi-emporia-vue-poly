@@ -41,6 +41,8 @@ The settings for this node are:
 
 # Release Notes
 
+- 1.0.4 05/11/2022
+   - Daily (GV1) API changed
 - 1.0.3 05/10/2022
    - Update to newer pyemvue library code
 - 1.0.2 03/15/2022

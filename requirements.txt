@@ -1,4 +1,4 @@
-udi_interface >= 3.0.44
+udi_interface >= 3.0.46
 python-jose >= 3.3.0
 #pyemvue == 0.12.3
 #pyemvue == 0.14.1
