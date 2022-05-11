@@ -53,15 +53,16 @@ class Controller(udi_interface.Node):
 
     def query_day(self):
         # Daily total?
-        usage = self.vue.get_devices_usage(self.deviceList, None,
+        usage = self.vue.get_device_list_usage(self.deviceList, None,
                 scale=pyemvue.enums.Scale.DAY.value,
                 unit=pyemvue.enums.Unit.KWH.value)
 
-        LOGGER.debug('Daily = {}'.format(round(usage[0].usage,4)))
-
-        self.setDriver('GV1', round(usage[0].usage, 4), True, True)
-        
-
+        for gid, device in usage.items():
+            for channelnum, channel in device.channels.items():
+                if channel.name == 'Main':
+                    kwh = round(channel.usage, 4)
+                    LOGGER.debug('Daily = {}'.format(kwh))
+                    self.setDriver('GV1', kwh, True, False)
 
     def getDeviceId(self):
         dev_list = self.vue.get_devices()
@@ -148,7 +149,7 @@ class Controller(udi_interface.Node):
             }
 
     drivers = [
-            {'driver': 'ST', 'value': 1, 'uom': 2},    # node server status
+            {'driver': 'ST', 'value': 1, 'uom': 25},    # node server status
             {'driver': 'TPW', 'value': 0, 'uom': 33},  # power
             {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
             ]
