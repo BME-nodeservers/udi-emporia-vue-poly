@@ -252,17 +252,12 @@ class PyEmVue(object):
             # Token expired and we renewed it. Store new token
             self._store_tokens()
 
-    def _store_tokens(self, tokens: list[str]):
+    def _store_tokens(self):
         if not self.token_storage_file: return
-        data = {
-            'idToken': self.cognito.id_token,
-            'accessToken': self.cognito.access_token,
-            'refreshToken': self.cognito.refresh_token
-        }
         if self.username:
-            data['email'] = self.username
+            tokens['username'] = self.username
         with open(self.token_storage_file, 'w') as f:
-            json.dump(data, f, indent=2)
+            json.dump(tokens, f, indent=2)
 
     def _get_request(self, full_endpoint):
         if not self.cognito: raise Exception('Must call "login" before calling any API methods.')
