@@ -7,6 +7,7 @@ Copyright (C) 2021 Robert Paauwe
 import udi_interface
 import sys
 import time
+from datetime import datetime
 import pyemvue
 
 LOGGER = udi_interface.LOGGER
@@ -120,6 +121,55 @@ class Controller(udi_interface.Node):
                 LOGGER.error('Failed to connect to VUE: {}'.format(e))
                 self.Notices['error'] = '{}'.format(e)
 
+    def print_recursive(self, device_usage_dict, info, depth=0):
+        for gid, device in device_usage_dict.items():
+            for channelnum, channel in device.channels.items():
+                name = channel.name
+                if name == 'Main':
+                    name = info[gid].device_name
+
+                dash = '-'*depth
+                LOGGER.info(f'{dash} {gid} {channelnum} {name} {channel.usage} {channel.channel_multiplier} kwh')
+
+                if channel.nested_devices:
+                    self.print_recursive(channel.nested_devices, depth+1)
+
+    def deviceinfo(self):
+        LOGGER.info('Devices:')
+        devices = self.vue.get_devices()
+        outlets, chargers = self.vue.get_devices_status()
+
+        for dev in devices:
+            dev = self.vue.populate_device_properties(dev)
+            LOGGER.info(f'GID:         {dev.device_gid}')
+            LOGGER.info(f'Manufacturer:{dev.manufacturer_id}')
+            LOGGER.info(f'Model:       {dev.model}')
+            LOGGER.info(f'Firmware:    {dev.firmware}')
+            LOGGER.info(f'Name:        {dev.device_name}')
+            LOGGER.info(f'Price/kwh:   {dev.usage_cent_per_kw_hour}')
+            if dev.outlet:
+                LOGGER.info(f'Found an outlet:  {dev.outlet.outlet_on}')
+            if dev.ev_charger:
+                LOGGER.info(f'Found a charger:  {dev.ev_charger.charger_on}')
+                LOGGER.info(f'Charge rate:      {dev.ev_charger.charging_rate}')
+                LOGGER.info(f'Max charge rate:  {dev.ev_charger.max_charging_rate}')
+            LOGGER.info('--------------------------------------------')
+
+        LOGGER.info('Usage Info for scale=Hour:')
+        deviceGids = []
+        info = {}
+        for dev in devices:
+            if not dev.device_gid in deviceGids:
+                deviceGids.append(dev.device_gid)
+                info[dev.device_gid] = dev
+            else:
+                info[dev.device_gid].channels += dev.channels
+
+        device_usage_dict = self.vue.get_device_list_usage(deviceGids=deviceGids, instant=datetime.utcnow(), scale=pyemvue.enums.Scale.HOUR.value, unit=pyemvue.enums.Unit.KWH.value)
+
+        self.print_recursive(device_usage_dict, info)
+
+
     def start(self):
         LOGGER.info('Starting node server')
         self.poly.updateProfile()
@@ -130,9 +180,13 @@ class Controller(udi_interface.Node):
 
         LOGGER.info('Node server started')
 
-        if self.configured:
-            self.query()
-            self.query_day()
+        while not self.configured:
+            LOGGER.debug('waiting for configuration.')
+            time.sleep(2)
+
+        self.query()
+        self.query_day()
+        self.deviceinfo()
 
     def poll(self, poll):
         if poll == 'shortPoll':
