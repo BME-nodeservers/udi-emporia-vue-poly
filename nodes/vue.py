@@ -40,11 +40,14 @@ class Controller(udi_interface.Node):
         if not self.configured:
             return
 
+        LOGGER.info('Query: get device usage for 1s')
         usage = self.vue.get_device_list_usage(self.deviceList, None,
                 scale=pyemvue.enums.Scale.SECOND.value,
                 unit=pyemvue.enums.Unit.KWH.value)
 
+
         for gid, device in usage.items():
+            LOGGER.info('Getting usage for {} {}'.format(device.name, device.model))
             for channelnum, channel in device.channels.items():
                 if channel.name == 'Main':
                     if channel.usage:
@@ -54,6 +57,9 @@ class Controller(udi_interface.Node):
 
 
     def query_day(self):
+        if not self.configured:
+            return
+
         # Daily total?
         usage = self.vue.get_device_list_usage(self.deviceList, None,
                 scale=pyemvue.enums.Scale.DAY.value,
@@ -184,9 +190,12 @@ class Controller(udi_interface.Node):
             LOGGER.debug('waiting for configuration.')
             time.sleep(2)
 
+        LOGGER.info('Node server configured, get device information')
+        self.deviceinfo()
+
+        LOGGER.info('Doing initial queries')
         self.query()
         self.query_day()
-        self.deviceinfo()
 
     def poll(self, poll):
         if poll == 'shortPoll':
