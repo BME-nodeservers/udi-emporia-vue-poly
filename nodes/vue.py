@@ -47,7 +47,7 @@ class Controller(udi_interface.Node):
 
 
         for gid, device in usage.items():
-            LOGGER.info('Getting usage for {} {}'.format(device.name, device.model))
+            LOGGER.info('Getting usage for {} {}'.format(device.device_name, device.model))
             for channelnum, channel in device.channels.items():
                 if channel.name == 'Main':
                     if channel.usage:
