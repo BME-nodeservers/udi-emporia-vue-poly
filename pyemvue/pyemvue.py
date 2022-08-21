@@ -178,7 +178,7 @@ class PyEmVue(object):
 
     def get_devices_status(self, device_list=None):
         """Gets the list of outlets and chargers. If device list is provided, updates the connected status on each device."""
-        url = API_ROOT + API_GET_STATUS)
+        url = API_ROOT + API_GET_STATUS
         response = self._get_request(url)
         response.raise_for_status()
         chargers = []
