@@ -7,7 +7,7 @@ from pyemvue.device import VueDevice, VueUsageDevice
 from pyemvue.enums import Scale, Unit
 from pyemvue.pyemvue import PyEmVue
 
-def print_recursive(usage_dict: dict[int, VueUsageDevice], info: dict[int, VueDevice], scaleBy: float=1, unit='kWh', depth=0):
+def print_recursive(usage_dict, info, scaleBy=1, unit='kWh', depth=0):
     for gid, device in usage_dict.items():
         for channelnum, channel in device.channels.items():
             name = channel.name
