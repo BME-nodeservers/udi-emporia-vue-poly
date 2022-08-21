@@ -242,7 +242,7 @@ class PyEmVue(object):
             self._check_token()
             user = self.cognito.get_user()
             self.username = user._data['email']
-            self.customer = self.get_customer_details()
+            self.customer = self.get_customer_details(self.username)
             self._store_tokens()
         return self.customer is not None
         
