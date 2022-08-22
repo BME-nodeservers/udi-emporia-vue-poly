@@ -251,7 +251,7 @@ class PyEmVue(object):
             # Token expired and we renewed it. Store new token
             self._store_tokens()
 
-    def _store_tokens(self, tokens):
+    def _store_tokens(self):
         if not self.token_storage_file: return
         data = {
             'idToken': self.cognito.id_token,
