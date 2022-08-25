@@ -3,7 +3,16 @@
 		<range uom="25" subset="0,1,2" nls="STATUS" />
 	</editor>
 
+	<editor id="kw">
+		<range uom="30" min="-100000" max="100000" prec="4" />
+	</editor>
 	<editor id="kwh">
 		<range uom="33" min="-100000" max="100000" prec="4" />
+	</editor>
+	<editor id="watt">
+		<range uom="73" min="-100000" max="100000" prec="4" />
+	</editor>
+	<editor id="kws">
+		<range uom="102" min="-100000" max="100000" prec="4" />
 	</editor>
 </editors>

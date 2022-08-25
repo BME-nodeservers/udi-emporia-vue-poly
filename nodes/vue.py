@@ -51,10 +51,28 @@ class Controller(udi_interface.Node):
             for channelnum, channel in device.channels.items():
                 if channel.name == 'Main':
                     if channel.usage:
+                        # why multiply this by 1 hour
+                        LOGGER.debug('Second = {}, {}'.format(channel.usage, kwh))
                         kwh = round(channel.usage * 3600, 4)
-                        #LOGGER.debug('Second = {}'.format(kwh))
-                        self.setDriver('TPW', kwh, True, False)
+                        self.setDriver('CPW', kwh, True, False)
 
+
+    def query_hour(self):
+        if not self.configured:
+            return
+
+        # Hourly total?
+        usage = self.vue.get_device_list_usage(self.deviceList, None,
+                scale=pyemvue.enums.Scale.HOUR.value,
+                unit=pyemvue.enums.Unit.KWH.value)
+
+        for gid, device in usage.items():
+            for channelnum, channel in device.channels.items():
+                if channel.name == 'Main':
+                    if channel.usage:
+                        kwh = round(channel.usage, 4)
+                        LOGGER.debug('Hourly = {}'.format(kwh))
+                        self.setDriver('GV1', kwh, True, False)
 
     def query_day(self):
         if not self.configured:
@@ -71,7 +89,24 @@ class Controller(udi_interface.Node):
                     if channel.usage:
                         kwh = round(channel.usage, 4)
                         LOGGER.debug('Daily = {}'.format(kwh))
-                        self.setDriver('GV1', kwh, True, False)
+                        self.setDriver('GV2', kwh, True, False)
+
+    def query_month(self):
+        if not self.configured:
+            return
+
+        # Monthly total?
+        usage = self.vue.get_device_list_usage(self.deviceList, None,
+                scale=pyemvue.enums.Scale.MONTH.value,
+                unit=pyemvue.enums.Unit.KWH.value)
+
+        for gid, device in usage.items():
+            for channelnum, channel in device.channels.items():
+                if channel.name == 'Main':
+                    if channel.usage:
+                        kwh = round(channel.usage, 4)
+                        LOGGER.debug('Monthly = {}'.format(kwh))
+                        self.setDriver('GV3', kwh, True, False)
 
     def getDeviceId(self):
         dev_list = self.vue.get_devices()
@@ -201,7 +236,9 @@ class Controller(udi_interface.Node):
         if poll == 'shortPoll':
             self.query()
         else:
+            self.query_hour()
             self.query_day()
+            self.query_month()
 
     def delete(self):
         LOGGER.info('Removing node server')
@@ -215,8 +252,10 @@ class Controller(udi_interface.Node):
 
     drivers = [
             {'driver': 'ST', 'value': 1, 'uom': 25},    # node server status
-            {'driver': 'TPW', 'value': 0, 'uom': 33},  # power
+            {'driver': 'CPW', 'value': 0, 'uom': 30},  # power
             {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
+            {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
+            {'driver': 'GV3', 'value': 0, 'uom': 33},  # power
             ]
 
     
