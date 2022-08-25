@@ -52,8 +52,8 @@ class Controller(udi_interface.Node):
                 if channel.name == 'Main':
                     if channel.usage:
                         # why multiply this by 1 hour
-                        LOGGER.debug('Second = {}, {}'.format(channel.usage, kwh))
                         kwh = round(channel.usage * 3600, 4)
+                        LOGGER.debug('Second = {}, {}'.format(channel.usage, kwh))
                         self.setDriver('CPW', kwh, True, False)
 
 
