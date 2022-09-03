@@ -15,4 +15,19 @@
 			</accepts>
 		</cmds>
 	</nodeDef>
+	<nodeDef id="channel" nodeType="139" nls="ctl">
+		<editors />
+		<sts>
+			<st id="CPW" editor="kw" />
+			<st id="GV1" editor="kwh" />
+			<st id="GV2" editor="kwh" />
+			<st id="GV3" editor="kwh" />
+		</sts>
+		<cmds>
+			<sends />
+			<accepts>
+				<cmd id="QUERY" />
+			</accepts>
+		</cmds>
+	</nodeDef>
 </nodeDefs>
