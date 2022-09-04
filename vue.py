@@ -46,7 +46,6 @@ def query(scale, extra):
             LOGGER.info('{} -- {}'.format(channelnum, channel.usage))
             if channel.channel_num == '1,2,3':
                 address = str(gid)
-                polyglot.getNode(address).update_status(1)
             else:
                 address = gid + '_' + channel.channel_num
 
@@ -145,12 +144,13 @@ def discover():
             LOGGER.info('Creating device node for {} ({})'.format(name, parent_addr))
             if dev.ev_charger:
                 node = vueDevice.VueCharger(polyglot, parent_addr, parent_addr, name, vue, dev.ev_charger)
+                polyglot.addNode(node)
             elif dev.outlet:
                 node = vueDevice.VueOutlet(polyglot, parent_addr, parent_addr, name, vue, dev.outlet)
+                polyglot.addNode(node)
             else:
                 node = vueDevice.VueDevice(polyglot, parent_addr, parent_addr, name)
-            polyglot.addNode(node)
-            node.update_status(0)
+                polyglot.addNode(node, conn_status="ST")
 
         # TODO: look up and create any channel children nodes
         for channel in dev.channels:
