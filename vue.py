@@ -66,6 +66,8 @@ def query(scale, extra):
             polygot.getNode(str(gid)).update_max_rate(device.ev_charger.mac_charging_rate)
             polygot.getNode(str(gid)).update_state(device.ev_charger.charger_on)
             # TODO: what about off peak schedules enabled true/false?
+        if device.outlet and extra:
+            polygot.getNode(str(gid)).update_state(device.outlet.outlet_on)
 
 
 def parameterHandler(params):
@@ -143,6 +145,8 @@ def discover():
             LOGGER.info('Creating device node for {} ({})'.format(name, parent_addr))
             if dev.ev_charger:
                 node = vueDevice.VueCharger(polyglot, parent_addr, parent_addr, name, vue, dev.ev_charger)
+            elif dev.outlet:
+                node = vueDevice.VueOutlet(polyglot, parent_addr, parent_addr, name, vue, dev.outlet)
             else:
                 node = vueDevice.VueDevice(polyglot, parent_addr, parent_addr, name)
             polyglot.addNode(node)

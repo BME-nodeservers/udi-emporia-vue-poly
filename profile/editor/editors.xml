@@ -2,6 +2,9 @@
 	<editor id="bool">
 		<range uom="25" subset="0,1,2" nls="STATUS" />
 	</editor>
+	<editor id="state">
+		<range uom="2" subset="0,1" nls="STATE" />
+	</editor>
 
 	<editor id="kw">
 		<range uom="30" min="-100000" max="100000" prec="4" />

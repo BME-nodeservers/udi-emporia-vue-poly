@@ -1,5 +1,7 @@
 ND-controller-NAME = emporia VUE
 ND-controler-ICON = EnergyMonitor
+ND-channel-NAME = emporia VUE
+ND-channel-ICON = EnergyMonitor
 CMD-ctl-QUERY-NAME = Query
 CMD-ctl-SET_RATE-NAME = Set
 CMDP-rate-SET_RATE-NAME = Charage Rate
@@ -11,6 +13,28 @@ ST-ctl-GV3-NAME = Monthly KWh
 ST-ctl-GV4-NAME = Charge Rate KW
 ST-ctl-GV5-NAME = Max Charge Rate KW
 
+ND-outlet-NAME = emporia VUE
+ND-outlet-ICON = EnergyMonitor
+ST-outlet-ST-NAME = Status
+ST-outlet-CPW-NAME = Killowatts
+ST-outlet-GV1-NAME = Hourly KWh
+ST-outlet-GV2-NAME = Daily KWh
+ST-outlet-GV3-NAME = Monthly KWh
+
+ND-charger-NAME = emporia VUE
+ND-charger-ICON = EnergyMonitor
+ST-charger-ST-NAME = Status
+ST-charger-CPW-NAME = Killowatts
+ST-charger-GV1-NAME = Hourly KWh
+ST-charger-GV2-NAME = Daily KWh
+ST-charger-GV3-NAME = Monthly KWh
+ST-charger-GV4-NAME = Charge Rate KW
+ST-charger-GV5-NAME = Max Charge Rate KW
+CMD-charger-SET_RATE-NAME = Set
+
 STATUS-0 = Disconnected
 STATUS-1 = Connected
 STATUS-2 = Failed
+
+STATE-0 = On
+STATE-1 = Off

@@ -137,3 +137,62 @@ class VueCharger(udi_interface.Node):
             {'driver': 'GV4', 'value': 0, 'uom': 30},  # power
             {'driver': 'GV5', 'value': 0, 'uom': 30},  # power
             ]
+
+class VueOutlet(udi_interface.Node):
+    id = 'outlet'
+    def __init__(self, polyglot, primary, address, name, vue, outlet):
+        super(VueDevice, self).__init__(polyglot, primary, address, name)
+        self.poly = polyglot
+        self.name = name
+        self.address = address
+        self.primary = primary
+        self.vueAPI = vue  # so we can set the charger on/off
+        self.outlet = outlet
+
+    def update_current(self, raw):
+        kwh = round(raw * 3600, 4)
+        self.setDriver('CPW', kwh, True, False)
+
+    def update_hour(self, raw):
+        kwh = round(raw, 4)
+        self.setDriver('GV1', kwh, True, False)
+
+    def update_day(self, raw):
+        kwh = round(raw, 4)
+        self.setDriver('GV2', kwh, True, False)
+
+    def update_month(self, raw):
+        kwh = round(raw, 4)
+        self.setDriver('GV3', kwh, True, False)
+
+    def update_state(self, state):
+        self.setDriver('ST', state, True, False)
+
+    def delete(self):
+        LOGGER.info('Removing node server')
+
+    def stop(self):
+        LOGGER.info('Stopping node server')
+
+    def query(self):
+        LOGGER.info('query called')
+
+    def set_on(self):
+        vueAPI.update_outlet(self.outlet, on=True)
+
+    def set_off(self):
+        vueAPI.update_outlet(self.outlet, on=False)
+
+    commands = {
+            'QUERY': query,
+            'DON': set_on,
+            'DOF': set_off,
+            }
+
+    drivers = [
+            {'driver': 'ST',  'value': 0, 'uom': 2},   # outlet state
+            {'driver': 'CPW', 'value': 0, 'uom': 30},  # power
+            {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
+            {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
+            {'driver': 'GV3', 'value': 0, 'uom': 33},  # power
+            ]

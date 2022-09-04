@@ -15,6 +15,7 @@
 			</accepts>
 		</cmds>
 	</nodeDef>
+
 	<nodeDef id="channel" nodeType="139" nls="ctl">
 		<editors />
 		<sts>
@@ -30,10 +31,11 @@
 			</accepts>
 		</cmds>
 	</nodeDef>
-	<nodeDef id="charger" nodeType="139" nls="ctl">
+
+	<nodeDef id="charger" nodeType="139" nls="charger">
 		<editors />
 		<sts>
-			<st id="ST" editor="bool" />
+			<st id="ST" editor="state" />
 			<st id="CPW" editor="kw" />
 			<st id="GV1" editor="kwh" />
 			<st id="GV2" editor="kwh" />
@@ -53,4 +55,22 @@
 			</accepts>
 		</cmds>
 	</nodeDef>
+
+	<nodeDef id="outlet" nodeType="139" nls="outlet">
+		<editors />
+		<sts>
+			<st id="ST" editor="state" />
+			<st id="CPW" editor="kw" />
+			<st id="GV1" editor="kwh" />
+			<st id="GV2" editor="kwh" />
+			<st id="GV3" editor="kwh" />
+		</sts>
+		<cmds>
+			<sends />
+			<accepts>
+				<cmd id="QUERY" />
+				<cmd id="DON" />
+				<cmd id="DOF" />
+			</accepts>
+		</cmds>
 </nodeDefs>
