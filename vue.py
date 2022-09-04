@@ -158,11 +158,11 @@ def discover():
             # channel_num == '1,2,3' is the parent node usage so skip it
             LOGGER.info('Found channel: {} - {}'.format(channel.channel_num, channel.name))
             if channel.channel_num != '1,2,3':
-                address = dev.device_gid + '_' + channel.channel_num
+                address = str(dev.device_gid) + '_' + str(channel.channel_num)
                 child = polyglot.getNode(address)
                 if not child:
                     if channel.name == '':
-                        channel.name = 'channel_' + channel.channel_num
+                        channel.name = 'channel_' + str(channel.channel_num)
                     child = vueChannel.VueChannel(polyglot, parent_addr, address, channel.name)
                     polyglot.addNode(child)
 
