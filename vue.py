@@ -22,17 +22,17 @@ def poll(poll_flag):
         return
 
     if poll_flag == 'shortPoll':
-        query(pyemvue.enums.Scale.SECOND.value)
+        query(pyemvue.enums.Scale.SECOND.value, extra=True)
     else:
         '''
         for longPoll we want to do the same as above, but for the
         different time scales.
         '''
-        query(pyemvue.enums.Scale.HOUR.value)
-        query(pyemvue.enums.Scale.DAY.value)
-        query(pyemvue.enums.Scale.MONTH.value)
+        query(pyemvue.enums.Scale.HOUR.value, extra=False)
+        query(pyemvue.enums.Scale.DAY.value, extra=False)
+        query(pyemvue.enums.Scale.MONTH.value, extra=False)
 
-def query(scale):
+def query(scale, extra):
     global vue
     global deviceList
     global polyglot
@@ -45,7 +45,7 @@ def query(scale):
             # how are we mapping each channel to child node?
             LOGGER.info('{} -- {}'.format(channelnum, channel.usage))
             if channel.channel_num == '1,2,3':
-                address = gid
+                address = str(gid)
                 polyglot.getNode(address).update_status(1)
             else:
                 address = gid + '_' + channel.channel_num
@@ -59,6 +59,13 @@ def query(scale):
                     polyglot.getNode(address).update_day(channel.usage)
                 elif scale == pyemvue.enums.Scale.MONTH.value:
                     polyglot.getNode(address).update_month(channel.usage)
+
+        if device.ev_charger and extra:
+            # TODO: Should we be using chargerOn, chargingRate, etc.?
+            polygot.getNode(str(gid)).update_rate(device.ev_charger.charging_rate)
+            polygot.getNode(str(gid)).update_max_rate(device.ev_charger.mac_charging_rate)
+            polygot.getNode(str(gid)).update_state(device.ev_charger.charger_on)
+            # TODO: what about off peak schedules enabled true/false?
 
 
 def parameterHandler(params):
@@ -121,16 +128,23 @@ def discover():
         LOGGER.info(f'Model:             {dev.model}')
         LOGGER.info(f'Firmware:          {dev.firmware}')
         LOGGER.info(f'Name:              {dev.device_name}')
+        if dev.ev_charger:
+            LOGGER.info(f'Charge rate:       {dev.ev_charger.charging_rate}')
+            LOGGER.info(f'Max charge rate:   {dev.ev_charger.max_charging_rate}')
 
         # create main device node for GID if needed
-        node = polyglot.getNode(dev.device_gid)
+        parent_addr = str(dev.device_gid)
+        node = polyglot.getNode(parent_addr)
         if not node:
             name = dev.device_name
             if name == None:
                 name = dev.model
 
-            LOGGER.info('Creating device node for {} ({})'.format(name, dev.device_gid))
-            node = vueDevice.VueDevice(polyglot, dev.device_gid, dev.device_gid, name)
+            LOGGER.info('Creating device node for {} ({})'.format(name, parent_addr))
+            if dev.ev_charger:
+                node = vueDevice.VueCharger(polyglot, parent_addr, parent_addr, name, vue, dev.ev_charger)
+            else:
+                node = vueDevice.VueDevice(polyglot, parent_addr, parent_addr, name)
             polyglot.addNode(node)
             node.update_status(0)
 
@@ -145,7 +159,7 @@ def discover():
                 if not child:
                     if channel.name == '':
                         channel.name = 'channel_' + channel.channel_num
-                    child = vueChannel.VueChannel(polyglot, dev.device_gid, address, channel.name)
+                    child = vueChannel.VueChannel(polyglot, parent_addr, address, channel.name)
                     polyglot.addNode(child)
 
     ready = True

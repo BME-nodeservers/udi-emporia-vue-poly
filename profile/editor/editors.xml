@@ -15,4 +15,7 @@
 	<editor id="kws">
 		<range uom="102" min="-100000" max="100000" prec="4" />
 	</editor>
+	<editor id="rate">
+		<range uom="30" min="0" max="100" prec="0" />
+	</editor>
 </editors>

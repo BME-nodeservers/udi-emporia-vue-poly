@@ -1,11 +1,15 @@
 ND-controller-NAME = emporia VUE
 ND-controler-ICON = EnergyMonitor
 CMD-ctl-QUERY-NAME = Query
+CMD-ctl-SET_RATE-NAME = Set
+CMDP-rate-SET_RATE-NAME = Charage Rate
 ST-ctl-ST-NAME = Online
 ST-ctl-CPW-NAME = Killowatts
 ST-ctl-GV1-NAME = Hourly KWh
 ST-ctl-GV2-NAME = Daily KWh
 ST-ctl-GV3-NAME = Monthly KWh
+ST-ctl-GV4-NAME = Charge Rate KW
+ST-ctl-GV5-NAME = Max Charge Rate KW
 
 STATUS-0 = Disconnected
 STATUS-1 = Connected

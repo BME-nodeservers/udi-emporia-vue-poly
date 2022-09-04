@@ -61,3 +61,79 @@ class VueDevice(udi_interface.Node):
             ]
 
     
+class VueCharger(udi_interface.Node):
+    id = 'charger'
+    def __init__(self, polyglot, primary, address, name, vue, charger):
+        super(VueDevice, self).__init__(polyglot, primary, address, name)
+        self.poly = polyglot
+        self.name = name
+        self.address = address
+        self.primary = primary
+        self.vueAPI = vue  # so we can set the charger on/off
+        self.charger = charger
+
+    def update_current(self, raw):
+        kwh = round(raw * 3600, 4)
+        self.setDriver('CPW', kwh, True, False)
+
+    def update_hour(self, raw):
+        kwh = round(raw, 4)
+        self.setDriver('GV1', kwh, True, False)
+
+    def update_day(self, raw):
+        kwh = round(raw, 4)
+        self.setDriver('GV2', kwh, True, False)
+
+    def update_month(self, raw):
+        kwh = round(raw, 4)
+        self.setDriver('GV3', kwh, True, False)
+
+    def update_status(self, online):
+        self.setDriver('ST', online, True, False)
+
+    def update_rate(self, raw):
+        self.setDriver('GV4', raw, True, False)
+
+    def update_max_rate(self, raw):
+        self.setDriver('GV5', raw, True, False)
+
+    def update_state(self, state):
+        self.setDriver('ST', state, True, False)
+
+    def delete(self):
+        LOGGER.info('Removing node server')
+
+    def stop(self):
+        LOGGER.info('Stopping node server')
+
+    def query(self):
+        LOGGER.info('query called')
+
+    def set_on(self):
+        vueAPI.update_charger(self.charger, on=True)
+
+    def set_off(self):
+        vueAPI.update_charger(self.charger, on=False)
+
+    def set_rate(self, cmd):
+        LOGGER.info('TESTING: set rate to :: {}'.format(cmd))
+        LOGGER.info(' -- rate = {}'.format(cmd['query']['SET_RATE.uom30']))
+        rate = int(cmd['query']['SET_RATE.uom30'])
+        vueAPI.update_charger(self.charger, charge_rate=rate)
+
+    commands = {
+            'QUERY': query,
+            'DON': set_on,
+            'DOF': set_off,
+            'SET_RATE': set_rate,
+            }
+
+    drivers = [
+            {'driver': 'ST', 'value': 1, 'uom': 25},   # charger state
+            {'driver': 'CPW', 'value': 0, 'uom': 30},  # power
+            {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
+            {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
+            {'driver': 'GV3', 'value': 0, 'uom': 33},  # power
+            {'driver': 'GV4', 'value': 0, 'uom': 30},  # power
+            {'driver': 'GV5', 'value': 0, 'uom': 30},  # power
+            ]

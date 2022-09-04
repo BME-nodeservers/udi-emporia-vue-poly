@@ -30,4 +30,27 @@
 			</accepts>
 		</cmds>
 	</nodeDef>
+	<nodeDef id="charger" nodeType="139" nls="ctl">
+		<editors />
+		<sts>
+			<st id="ST" editor="bool" />
+			<st id="CPW" editor="kw" />
+			<st id="GV1" editor="kwh" />
+			<st id="GV2" editor="kwh" />
+			<st id="GV3" editor="kwh" />
+			<st id="GV4" editor="rate" />
+			<st id="GV5" editor="rate" />
+		</sts>
+		<cmds>
+			<sends />
+			<accepts>
+				<cmd id="QUERY" />
+				<cmd id="DON" />
+				<cmd id="DOF" />
+        <cmd id="SET_RATE" >
+          <p id="SET_RATE" editor="rate" INIT="GV4" />
+        </cmd>
+			</accepts>
+		</cmds>
+	</nodeDef>
 </nodeDefs>
