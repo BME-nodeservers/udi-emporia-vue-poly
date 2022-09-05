@@ -48,6 +48,7 @@ def query(scale, extra):
                 address = str(gid)
             else:
                 address = str(gid) + '_' + str(channel.channel_num)
+            address = polyglot.getValidAddress(address)
 
             if channel.usage:
                 LOGGER.info('Updating child node {}'.format(address))
@@ -171,6 +172,7 @@ def discover():
             LOGGER.info('Found channel: {} - {}'.format(channel.channel_num, channel.name))
             if channel.channel_num != '1,2,3':
                 address = str(dev.device_gid) + '_' + str(channel.channel_num)
+                address = polyglot.getValidAddress(address)
                 child = polyglot.getNode(address)
                 if not child:
                     name = channel.name
