@@ -51,23 +51,33 @@ def query(scale, extra):
 
             if channel.usage:
                 LOGGER.info('Updating child node {}'.format(address))
-                if scale == pyemvue.enums.Scale.SECOND.value:
-                    polyglot.getNode(address).update_current(channel.usage)
-                elif scale == pyemvue.enums.Scale.HOUR.value:
-                    polyglot.getNode(address).update_hour(channel.usage)
-                elif scale == pyemvue.enums.Scale.DAY.value:
-                    polyglot.getNode(address).update_day(channel.usage)
-                elif scale == pyemvue.enums.Scale.MONTH.value:
-                    polyglot.getNode(address).update_month(channel.usage)
+                try:
+                    if scale == pyemvue.enums.Scale.SECOND.value:
+                        polyglot.getNode(address).update_current(channel.usage)
+                    elif scale == pyemvue.enums.Scale.HOUR.value:
+                        polyglot.getNode(address).update_hour(channel.usage)
+                    elif scale == pyemvue.enums.Scale.DAY.value:
+                        polyglot.getNode(address).update_day(channel.usage)
+                    elif scale == pyemvue.enums.Scale.MONTH.value:
+                        polyglot.getNode(address).update_month(channel.usage)
+                except Exception as e:
+                    LOGGER.error('Update of node {} failed for scale {}'.format(address, scale))
 
         if device.ev_charger and extra:
-            # TODO: Should we be using chargerOn, chargingRate, etc.?
-            polygot.getNode(str(gid)).update_rate(device.ev_charger.charging_rate)
-            polygot.getNode(str(gid)).update_max_rate(device.ev_charger.mac_charging_rate)
-            polygot.getNode(str(gid)).update_state(device.ev_charger.charger_on)
-            # TODO: what about off peak schedules enabled true/false?
+            try:
+                # TODO: Should we be using chargerOn, chargingRate, etc.?
+                polygot.getNode(str(gid)).update_rate(device.ev_charger.charging_rate)
+                polygot.getNode(str(gid)).update_max_rate(device.ev_charger.mac_charging_rate)
+                polygot.getNode(str(gid)).update_state(device.ev_charger.charger_on)
+                # TODO: what about off peak schedules enabled true/false?
+            except Exception as e:
+                LOGGER.error('Failed to update {}:: {}'.format(gid, e))
+
         if device.outlet and extra:
-            polygot.getNode(str(gid)).update_state(device.outlet.outlet_on)
+            try:
+                polygot.getNode(str(gid)).update_state(device.outlet.outlet_on)
+            except Exception as e:
+                LOGGER.error('Failed to update {}:: {}'.format(gid, e))
 
 
 def parameterHandler(params):
@@ -178,7 +188,7 @@ def discover():
 if __name__ == "__main__":
     try:
         polyglot = udi_interface.Interface([])
-        polyglot.start('1.0.13')
+        polyglot.start('1.0.14')
 
         polyglot.subscribe(polyglot.CUSTOMPARAMS, parameterHandler)
         polyglot.subscribe(polyglot.POLL, poll)
