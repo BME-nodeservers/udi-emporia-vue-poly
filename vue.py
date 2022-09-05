@@ -141,6 +141,7 @@ def discover():
             name = dev.device_name
             if name == None:
                 name = dev.model
+            name = polyglot.getValidName(name)
 
             LOGGER.info('Creating device node for {} ({})'.format(name, parent_addr))
             if dev.ev_charger:
@@ -165,6 +166,7 @@ def discover():
                     name = channel.name
                     if name == '':
                         name = 'channel_' + str(channel.channel_num)
+                    name = polyglot.getValidName(name)
 
                     LOGGER.info('Creating child node {} / {}'.format(name, address))
                     child = vueChannel.VueChannel(polyglot, parent_addr, address, name)
