@@ -64,7 +64,7 @@ class VueDevice(udi_interface.Node):
 class VueCharger(udi_interface.Node):
     id = 'charger'
     def __init__(self, polyglot, primary, address, name, vue, charger):
-        super(VueDevice, self).__init__(polyglot, primary, address, name)
+        super(VueCharger, self).__init__(polyglot, primary, address, name)
         self.poly = polyglot
         self.name = name
         self.address = address
@@ -141,7 +141,7 @@ class VueCharger(udi_interface.Node):
 class VueOutlet(udi_interface.Node):
     id = 'outlet'
     def __init__(self, polyglot, primary, address, name, vue, outlet):
-        super(VueDevice, self).__init__(polyglot, primary, address, name)
+        super(VueOutlet, self).__init__(polyglot, primary, address, name)
         self.poly = polyglot
         self.name = name
         self.address = address
