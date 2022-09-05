@@ -73,4 +73,5 @@
 				<cmd id="DOF" />
 			</accepts>
 		</cmds>
+	</nodeDef>
 </nodeDefs>
