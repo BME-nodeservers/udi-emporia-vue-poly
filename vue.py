@@ -47,7 +47,7 @@ def query(scale, extra):
             if channel.channel_num == '1,2,3':
                 address = str(gid)
             else:
-                address = gid + '_' + channel.channel_num
+                address = str(gid) + '_' + str(channel.channel_num)
 
             if channel.usage:
                 if scale == pyemvue.enums.Scale.SECOND.value:
@@ -172,7 +172,7 @@ def discover():
 if __name__ == "__main__":
     try:
         polyglot = udi_interface.Interface([])
-        polyglot.start('1.0.11')
+        polyglot.start('1.0.12')
 
         polyglot.subscribe(polyglot.CUSTOMPARAMS, parameterHandler)
         polyglot.subscribe(polyglot.POLL, poll)
