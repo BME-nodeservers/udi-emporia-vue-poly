@@ -50,6 +50,7 @@ def query(scale, extra):
                 address = str(gid) + '_' + str(channel.channel_num)
 
             if channel.usage:
+                LOGGER.info('Updating child node {}'.format(address))
                 if scale == pyemvue.enums.Scale.SECOND.value:
                     polyglot.getNode(address).update_current(channel.usage)
                 elif scale == pyemvue.enums.Scale.HOUR.value:
@@ -161,9 +162,12 @@ def discover():
                 address = str(dev.device_gid) + '_' + str(channel.channel_num)
                 child = polyglot.getNode(address)
                 if not child:
-                    if channel.name == '':
-                        channel.name = 'channel_' + str(channel.channel_num)
-                    child = vueChannel.VueChannel(polyglot, parent_addr, address, channel.name)
+                    name = channel.name
+                    if name == '':
+                        name = 'channel_' + str(channel.channel_num)
+
+                    LOGGER.info('Creating child node {} / {}'.format(name, address))
+                    child = vueChannel.VueChannel(polyglot, parent_addr, address, name)
                     polyglot.addNode(child)
 
     ready = True
