@@ -10,12 +10,20 @@ import time
 import pyemvue
 from nodes import vueDevice
 from nodes import vueChannel
+import re
 
 LOGGER = udi_interface.LOGGER
 polyglot = None
 vue = None
 deviceList = []
 ready = False
+
+# UDI interface getValidAddress doesn't seem to work right
+def makeValidAddress(address):
+    address = bytes(address, 'utf-8').decode('utf-8', 'ignore')
+    address = re.sub(r"[<>`~!@#$%^&*(){}[\]?/\\;:\"'\-]+", "", address)
+    address = address.lower()[:14]
+    return address
 
 def poll(poll_flag):
     if not ready:
@@ -48,7 +56,7 @@ def query(scale, extra):
                 address = str(gid)
             else:
                 address = str(gid) + '_' + str(channel.channel_num)
-            address = polyglot.getValidAddress(address)
+            address = makeValidAddress(address)
 
             if channel.usage:
                 LOGGER.info('Updating child node {}'.format(address))
@@ -163,20 +171,21 @@ def discover():
                 polyglot.addNode(node)
             else:
                 node = vueDevice.VueDevice(polyglot, parent_addr, parent_addr, name)
+                # FIXME: this may only work for one node
                 polyglot.addNode(node, conn_status="ST")
 
-        # TODO: look up and create any channel children nodes
+        # look up and create any channel children nodes
         for channel in dev.channels:
             # Look at channel_num == '1', '2', etc.
             # channel_num == '1,2,3' is the parent node usage so skip it
             LOGGER.info('Found channel: {} - {}'.format(channel.channel_num, channel.name))
             if channel.channel_num != '1,2,3':
                 address = str(dev.device_gid) + '_' + str(channel.channel_num)
-                address = polyglot.getValidAddress(address)
+                address = makeValidAddress(address)
                 child = polyglot.getNode(address)
                 if not child:
                     name = channel.name
-                    if name == '':
+                    if name == '' or name == None:
                         name = 'channel_' + str(channel.channel_num)
                     name = polyglot.getValidName(name)
 
