@@ -58,19 +58,18 @@ def query(scale, extra):
                 address = str(gid) + '_' + str(channel.channel_num)
             address = makeValidAddress(address)
 
-            if channel.usage:
-                LOGGER.info('Updating child node {}'.format(address))
-                try:
-                    if scale == pyemvue.enums.Scale.SECOND.value:
-                        polyglot.getNode(address).update_current(channel.usage)
-                    elif scale == pyemvue.enums.Scale.HOUR.value:
-                        polyglot.getNode(address).update_hour(channel.usage)
-                    elif scale == pyemvue.enums.Scale.DAY.value:
-                        polyglot.getNode(address).update_day(channel.usage)
-                    elif scale == pyemvue.enums.Scale.MONTH.value:
-                        polyglot.getNode(address).update_month(channel.usage)
-                except Exception as e:
-                    LOGGER.error('Update of node {} failed for scale {}'.format(address, scale))
+            LOGGER.info('Updating child node {}'.format(address))
+            try:
+                if scale == pyemvue.enums.Scale.SECOND.value:
+                    polyglot.getNode(address).update_current(channel.usage)
+                elif scale == pyemvue.enums.Scale.HOUR.value:
+                    polyglot.getNode(address).update_hour(channel.usage)
+                elif scale == pyemvue.enums.Scale.DAY.value:
+                    polyglot.getNode(address).update_day(channel.usage)
+                elif scale == pyemvue.enums.Scale.MONTH.value:
+                    polyglot.getNode(address).update_month(channel.usage)
+            except Exception as e:
+                LOGGER.error('Update of node {} failed for scale {}'.format(address, scale))
 
         if device.ev_charger and extra:
             try:
