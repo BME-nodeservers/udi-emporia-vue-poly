@@ -166,7 +166,10 @@ class VueOutlet(udi_interface.Node):
         self.setDriver('GV3', kwh, True, False)
 
     def update_state(self, state):
-        self.setDriver('ST', state, True, False)
+        if state:
+            self.setDriver('ST', 1, True, False)
+        else:
+            self.setDriver('ST', 0, True, False)
 
     def delete(self):
         LOGGER.info('Removing node server')

@@ -49,9 +49,12 @@ def query(scale, extra):
             unit=pyemvue.enums.Unit.KWH.value)
 
     for gid, device in usage.items():
+        # device is class VueUsageDevice. this adds channels dictionary
+        LOGGER.info('Found usage data for {}'.format(gid))
         for channelnum, channel in device.channels.items():
+            # channel is a VueDeviceChannelUsage class object
             # how are we mapping each channel to child node?
-            LOGGER.info('{} -- {}'.format(channelnum, channel.usage))
+            LOGGER.info('{} => {} -- {}'.format(gid, channelnum, channel.usage))
             if channel.channel_num == '1,2,3':
                 address = str(gid)
             else:
@@ -151,6 +154,8 @@ def discover():
         if dev.ev_charger:
             LOGGER.info(f'Charge rate:       {dev.ev_charger.charging_rate}')
             LOGGER.info(f'Max charge rate:   {dev.ev_charger.max_charging_rate}')
+        if dev.outlet:
+            LOGGER.info(f'Outlet:            {dev.outlet.outlet_on}')
 
         # create main device node for GID if needed
         parent_addr = str(dev.device_gid)
@@ -177,7 +182,7 @@ def discover():
         for channel in dev.channels:
             # Look at channel_num == '1', '2', etc.
             # channel_num == '1,2,3' is the parent node usage so skip it
-            LOGGER.info('Found channel: {} - {}'.format(channel.channel_num, channel.name))
+            LOGGER.info('Found channel: {} - {} ({})'.format(channel.channel_num, channel.name, channel.channel_type_gid))
             if channel.channel_num != '1,2,3':
                 address = str(dev.device_gid) + '_' + str(channel.channel_num)
                 address = makeValidAddress(address)
