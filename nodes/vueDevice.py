@@ -180,10 +180,10 @@ class VueOutlet(udi_interface.Node):
     def query(self):
         LOGGER.info('query called')
 
-    def set_on(self):
+    def set_on(self, cmd):
         vueAPI.update_outlet(self.outlet, on=True)
 
-    def set_off(self):
+    def set_off(self, cmd):
         vueAPI.update_outlet(self.outlet, on=False)
 
     commands = {
