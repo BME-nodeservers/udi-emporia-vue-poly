@@ -31,6 +31,7 @@ def poll(poll_flag):
 
     if poll_flag == 'shortPoll':
         query(pyemvue.enums.Scale.SECOND.value, extra=True)
+        #query(pyemvue.enums.Scale.MINUTE.value, extra=True)
     else:
         '''
         for longPoll we want to do the same as above, but for the
@@ -64,6 +65,8 @@ def query(scale, extra):
             LOGGER.info('Updating child node {}'.format(address))
             try:
                 if scale == pyemvue.enums.Scale.SECOND.value:
+                    polyglot.getNode(address).update_current(channel.usage)
+                elif scale == pyemvue.enums.Scale.MINUTE.value:
                     polyglot.getNode(address).update_current(channel.usage)
                 elif scale == pyemvue.enums.Scale.HOUR.value:
                     polyglot.getNode(address).update_hour(channel.usage)
@@ -124,6 +127,28 @@ def parameterHandler(params):
         except Exception as e:
             LOGGER.error('Discovery failed: {}'.format(e))
 
+def print_recursive(usage, info):
+    for gid, dev in usage.items():
+        for channelnum, channel in dev.channels.items():
+            name = channel.name
+            if name == 'Main':
+                name = info[gid].device_name
+            LOGGER.info(f'TEST: {gid} {channelnum} {name} {channel.usage} kwh')
+            if channel.nested_devices:
+                print_recursive(channel.nested_devices, info)
+
+def test_outlet_usage(dev):
+    gids = []
+    info = {}
+
+    gids.append(dev.device_gid)
+    info[dev.device_gid] = dev
+
+    usage = vue.get_device_list_usage(gids, None, pyemvue.enums.Scale.HOUR.value, pyemvue.enums.Unit.KWH.value)
+
+    LOGGER.info('TEST: report hourly usage for outlet {}'.format(dev.device_gid))
+    print_recursive(usage, info)
+
 '''
 query for the devices on the account and create corresponding nodes. We
 create a node for each GID with child nodes for each channel.
@@ -173,6 +198,7 @@ def discover():
             elif dev.outlet:
                 node = vueDevice.VueOutlet(polyglot, parent_addr, parent_addr, name, vue, dev.outlet)
                 polyglot.addNode(node)
+                test_outlet_usage(dev)
             else:
                 node = vueDevice.VueDevice(polyglot, parent_addr, parent_addr, name)
                 # FIXME: this may only work for one node
