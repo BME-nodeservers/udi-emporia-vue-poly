@@ -75,7 +75,7 @@ def query(scale, extra):
                 elif scale == pyemvue.enums.Scale.MONTH.value:
                     polyglot.getNode(address).update_month(channel.usage)
             except Exception as e:
-                LOGGER.error('Update of node {} failed for scale {}'.format(address, scale))
+                LOGGER.error('Update of node {} failed for scale {} :: {}'.format(address, scale, e))
 
         if device.ev_charger and extra:
             try:
@@ -229,7 +229,7 @@ def discover():
 if __name__ == "__main__":
     try:
         polyglot = udi_interface.Interface([])
-        polyglot.start('1.0.16')
+        polyglot.start('1.0.17')
 
         polyglot.subscribe(polyglot.CUSTOMPARAMS, parameterHandler)
         polyglot.subscribe(polyglot.POLL, poll)
