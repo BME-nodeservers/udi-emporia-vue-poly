@@ -21,7 +21,8 @@ class VueDevice(udi_interface.Node):
         self.primary = primary
 
     def update_current(self, raw):
-        kwh = round(raw * 3600, 4)
+        #kwh = round(raw * 3600, 4)
+        kwh = round(raw * 60, 4)
         self.setDriver('CPW', kwh, True, False)
 
     def update_hour(self, raw):
@@ -73,7 +74,8 @@ class VueCharger(udi_interface.Node):
         self.charger = charger
 
     def update_current(self, raw):
-        kwh = round(raw * 3600, 4)
+        #kwh = round(raw * 3600, 4)
+        kwh = round(raw * 60, 4)
         self.setDriver('CPW', kwh, True, False)
 
     def update_hour(self, raw):
@@ -153,7 +155,8 @@ class VueOutlet(udi_interface.Node):
         self.outlet = outlet
 
     def update_current(self, raw):
-        kwh = round(raw * 3600, 4)
+        #kwh = round(raw * 3600, 4)
+        kwh = round(raw * 60, 4)
         self.setDriver('CPW', kwh, True, False)
 
     def update_hour(self, raw):

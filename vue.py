@@ -17,6 +17,7 @@ polyglot = None
 vue = None
 deviceList = []
 ready = False
+hour_update = 0
 
 # UDI interface getValidAddress doesn't seem to work right
 def makeValidAddress(address):
@@ -26,18 +27,27 @@ def makeValidAddress(address):
     return address
 
 def poll(poll_flag):
+    global hour_update
+
     if not ready:
         return
 
     if poll_flag == 'shortPoll':
-        query(pyemvue.enums.Scale.SECOND.value, extra=True)
-        #query(pyemvue.enums.Scale.MINUTE.value, extra=True)
+        #query(pyemvue.enums.Scale.SECOND.value, extra=True)
+        query(pyemvue.enums.Scale.MINUTE.value, extra=True)
+
+        if hour_update == 10:
+            hour_update = 0
+            query(pyemvue.enums.Scale.HOUR.value, extra=False)
+        else:
+            hour_update = hour_update + 1
+
     else:
         '''
         for longPoll we want to do the same as above, but for the
         different time scales.
         '''
-        query(pyemvue.enums.Scale.HOUR.value, extra=False)
+        #query(pyemvue.enums.Scale.HOUR.value, extra=False)
         query(pyemvue.enums.Scale.DAY.value, extra=False)
         query(pyemvue.enums.Scale.MONTH.value, extra=False)
 
@@ -64,16 +74,20 @@ def query(scale, extra):
 
             LOGGER.info('Updating child node {}'.format(address))
             try:
-                if scale == pyemvue.enums.Scale.SECOND.value:
-                    polyglot.getNode(address).update_current(channel.usage)
-                elif scale == pyemvue.enums.Scale.MINUTE.value:
-                    polyglot.getNode(address).update_current(channel.usage)
-                elif scale == pyemvue.enums.Scale.HOUR.value:
-                    polyglot.getNode(address).update_hour(channel.usage)
-                elif scale == pyemvue.enums.Scale.DAY.value:
-                    polyglot.getNode(address).update_day(channel.usage)
-                elif scale == pyemvue.enums.Scale.MONTH.value:
-                    polyglot.getNode(address).update_month(channel.usage)
+                node = polyglot.getNode(address)
+                if node:
+                    if scale == pyemvue.enums.Scale.SECOND.value:
+                        node.update_current(channel.usage)
+                    elif scale == pyemvue.enums.Scale.MINUTE.value:
+                        node.update_current(channel.usage)
+                    elif scale == pyemvue.enums.Scale.HOUR.value:
+                        node.update_hour(channel.usage)
+                    elif scale == pyemvue.enums.Scale.DAY.value:
+                        node.update_day(channel.usage)
+                    elif scale == pyemvue.enums.Scale.MONTH.value:
+                        node.update_month(channel.usage)
+                else:
+                    LOGGER.error('Node {} is missing!'.format(address))
             except Exception as e:
                 LOGGER.error('Update of node {} failed for scale {} :: {}'.format(address, scale, e))
 
