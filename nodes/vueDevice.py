@@ -109,17 +109,17 @@ class VueCharger(udi_interface.Node):
     def query(self):
         LOGGER.info('query called')
 
-    def set_on(self):
+    def set_on(self, cmd):
         vueAPI.update_charger(self.charger, on=True)
 
-    def set_off(self):
+    def set_off(self, cmd):
         vueAPI.update_charger(self.charger, on=False)
 
     def set_rate(self, cmd):
         LOGGER.info('TESTING: set rate to :: {}'.format(cmd))
         LOGGER.info(' -- rate = {}'.format(cmd['query']['SET_RATE.uom30']))
         rate = int(cmd['query']['SET_RATE.uom30'])
-        vueAPI.update_charger(self.charger, charge_rate=rate)
+        self.vueAPI.update_charger(self.charger, charge_rate=rate)
 
     commands = {
             'QUERY': query,
