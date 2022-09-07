@@ -98,7 +98,10 @@ class VueCharger(udi_interface.Node):
         self.setDriver('GV5', raw, True, False)
 
     def update_state(self, state):
-        self.setDriver('ST', state, True, False)
+        if state:
+            self.setDriver('ST', 1, True, False)
+        else:
+            self.setDriver('ST', 0, True, False)
 
     def delete(self):
         LOGGER.info('Removing node server')
@@ -129,7 +132,7 @@ class VueCharger(udi_interface.Node):
             }
 
     drivers = [
-            {'driver': 'ST', 'value': 1, 'uom': 25},   # charger state
+            {'driver': 'ST', 'value': 1, 'uom': 2},   # charger state
             {'driver': 'CPW', 'value': 0, 'uom': 30},  # power
             {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
             {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
