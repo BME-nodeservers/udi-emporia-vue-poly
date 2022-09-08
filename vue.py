@@ -106,8 +106,14 @@ def query(scale, extra):
                 LOGGER.error('Failed to update {}:: {}'.format(gid, e))
 
         if device.outlet and extra:
+            LOGGER.info('Device is an outlet')
             try:
-                polygot.getNode(str(gid)).update_state(device.outlet.outlet_on)
+                node = getNode(str(gid))
+                if node:
+                    LOGGER.info('updating status to {}'.format(device.outlet.outlet_on))
+                    node.update_state(device.outlet.outlet_on)
+                else:
+                    LOGGER.error('Node {} (outlet) is missing!'.format(gid))
             except Exception as e:
                 LOGGER.error('Failed to update {}:: {}'.format(gid, e))
 
