@@ -65,18 +65,18 @@ def query(scale, extra):
 
     for gid, device in usage.items():
         # device is class VueUsageDevice. this adds channels dictionary
-        LOGGER.info('Found usage data for {}'.format(gid))
+        LOGGER.debug('Found usage data for {}'.format(gid))
         for channelnum, channel in device.channels.items():
             # channel is a VueDeviceChannelUsage class object
             # how are we mapping each channel to child node?
-            LOGGER.info('{} => {} -- {}'.format(gid, channelnum, channel.usage))
+            LOGGER.debug('{} => {} -- {}'.format(gid, channelnum, channel.usage))
             if channel.channel_num == '1,2,3':
                 address = str(gid)
             else:
                 address = str(gid) + '_' + str(channel.channel_num)
             address = makeValidAddress(address)
 
-            LOGGER.info('Updating child node {}'.format(address))
+            LOGGER.debug('Updating child node {}'.format(address))
             try:
                 node = polyglot.getNode(address)
                 if node:
@@ -104,7 +104,7 @@ def query(scale, extra):
                 try:
                     node = polyglot.getNode(str(outlet.device_gid))
                     if node:
-                        LOGGER.info('Updating status to {}'.format(outlet.outlet_on))
+                        LOGGER.debug('Updating status to {}'.format(outlet.outlet_on))
                         node.update_state(outlet.outlet_on)
                     else:
                         LOGGER.error('Node {} (outlet) is missing!'.format(outlet.device_gid))
@@ -116,7 +116,7 @@ def query(scale, extra):
                 try:
                     node = polyglot.getNode(str(charger.device_gid))
                     if node:
-                        LOGGER.info('Updating status to {}'.format(charger.charger_on))
+                        LOGGER.debug('Updating status to {}'.format(charger.charger_on))
                         node.update_state(charger.charger_on)
                         node.update_rate(dcharger.charging_rate)
                         node.update_max_rate(charger.mac_charging_rate)
@@ -159,28 +159,6 @@ def parameterHandler(params):
             poll('longPoll') # force initial values
         except Exception as e:
             LOGGER.error('Discovery failed: {}'.format(e))
-
-def print_recursive(usage, info):
-    for gid, dev in usage.items():
-        for channelnum, channel in dev.channels.items():
-            name = channel.name
-            if name == 'Main':
-                name = info[gid].device_name
-            LOGGER.info(f'TEST: {gid} {channelnum} {name} {channel.usage} kwh')
-            if channel.nested_devices:
-                print_recursive(channel.nested_devices, info)
-
-def test_outlet_usage(dev):
-    gids = []
-    info = {}
-
-    gids.append(dev.device_gid)
-    info[dev.device_gid] = dev
-
-    usage = vue.get_device_list_usage(gids, None, pyemvue.enums.Scale.HOUR.value, pyemvue.enums.Unit.KWH.value)
-
-    LOGGER.info('TEST: report hourly usage for outlet {}'.format(dev.device_gid))
-    print_recursive(usage, info)
 
 '''
 query for the devices on the account and create corresponding nodes. We
