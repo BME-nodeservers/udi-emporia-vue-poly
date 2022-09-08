@@ -180,8 +180,15 @@ def discover():
         if not dev.device_gid in deviceList:
             deviceList.append(dev.device_gid)
             info[dev.device_gid] = dev
+            LOGGER.error('dev.channels is {}'.format(type(dev.channels)))
+            for i in dev.channels:
+                LOGGER.error('{} channel {} {}'.format(dev.device_gid, i.channel_num, i.name))
         else:
             info[dev.device_gid].channels += dev.channels
+            # dev.channels is what, an array of vueChannelDevices
+            LOGGER.error('dev.channels is {}'.format(type(dev.channels)))
+            for i in dev.channels:
+                LOGGER.error('{} channel {}'.format(dev.device_gid, i))
 
         LOGGER.info(f'GID:               {dev.device_gid}')
         LOGGER.info(f'Manufacturer:      {dev.manufacturer_id}')
