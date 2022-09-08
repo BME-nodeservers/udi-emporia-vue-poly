@@ -209,7 +209,6 @@ def discover():
             elif dev.outlet:
                 node = vueDevice.VueOutlet(polyglot, parent_addr, parent_addr, name, vue, dev.outlet)
                 polyglot.addNode(node)
-                #test_outlet_usage(dev)
             else:
                 node = vueDevice.VueDevice(polyglot, parent_addr, parent_addr, name)
                 # FIXME: this may only work for one node
@@ -240,7 +239,7 @@ def discover():
 if __name__ == "__main__":
     try:
         polyglot = udi_interface.Interface([])
-        polyglot.start('1.0.18')
+        polyglot.start('1.0.19')
 
         polyglot.subscribe(polyglot.CUSTOMPARAMS, parameterHandler)
         polyglot.subscribe(polyglot.POLL, poll)
