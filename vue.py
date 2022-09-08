@@ -59,9 +59,9 @@ def query(scale, extra):
     usage = vue.get_device_list_usage(deviceList, None, scale=scale,
             unit=pyemvue.enums.Unit.KWH.value)
 
-    LOGGER.info('Query: get info for {}'.format(deviceList))
-    for i in usage:
-        LOGGER.info('Got usage data for {}'.format(i))
+    #LOGGER.info('Query: get info for {}'.format(deviceList))
+    #for i in usage:
+    #    LOGGER.info('Got usage data for {}'.format(i))
 
     for gid, device in usage.items():
         # device is class VueUsageDevice. this adds channels dictionary
@@ -95,27 +95,36 @@ def query(scale, extra):
             except Exception as e:
                 LOGGER.error('Update of node {} failed for scale {} :: {}'.format(address, scale, e))
 
-        if device.ev_charger and extra:
-            try:
-                # TODO: Should we be using chargerOn, chargingRate, etc.?
-                polygot.getNode(str(gid)).update_rate(device.ev_charger.charging_rate)
-                polygot.getNode(str(gid)).update_max_rate(device.ev_charger.mac_charging_rate)
-                polygot.getNode(str(gid)).update_state(device.ev_charger.charger_on)
-                # TODO: what about off peak schedules enabled true/false?
-            except Exception as e:
-                LOGGER.error('Failed to update {}:: {}'.format(gid, e))
+    # Update outlet/charger status
+    if extra:
+        outlets, chargers = vue.get_devices_status()
 
-        if device.outlet and extra:
-            LOGGER.info('Device is an outlet')
-            try:
-                node = getNode(str(gid))
-                if node:
-                    LOGGER.info('updating status to {}'.format(device.outlet.outlet_on))
-                    node.update_state(device.outlet.outlet_on)
-                else:
-                    LOGGER.error('Node {} (outlet) is missing!'.format(gid))
-            except Exception as e:
-                LOGGER.error('Failed to update {}:: {}'.format(gid, e))
+        if outlets:
+            for outlet in outlets:
+                try:
+                    node = polyglot.getNode(str(outlet.device_gid))
+                    if node:
+                        LOGGER.info('Updating status to {}'.format(outlet.outlet_on))
+                        node.update_state(outlet.outlet_on)
+                    else:
+                        LOGGER.error('Node {} (outlet) is missing!'.format(outlet.device_gid))
+                except Exception as e:
+                    LOGGER.error('Failed to update {}:: {}'.format(outlet.device_gid, e))
+
+        if chargers:
+            for charger in chargers:
+                try:
+                    node = polyglot.getNode(str(charger.device_gid))
+                    if node:
+                        LOGGER.info('Updating status to {}'.format(charger.charger_on))
+                        node.update_state(charger.charger_on)
+                        node.update_rate(dcharger.charging_rate)
+                        node.update_max_rate(charger.mac_charging_rate)
+                    else:
+                        LOGGER.error('Node {} (charger) is missing!'.format(charger.device_gid))
+                except Exception as e:
+                    LOGGER.error('Failed to update {}:: {}'.format(charger.device_gid, e))
+
 
 
 def parameterHandler(params):
@@ -222,7 +231,7 @@ def discover():
             elif dev.outlet:
                 node = vueDevice.VueOutlet(polyglot, parent_addr, parent_addr, name, vue, dev.outlet)
                 polyglot.addNode(node)
-                test_outlet_usage(dev)
+                #test_outlet_usage(dev)
             else:
                 node = vueDevice.VueDevice(polyglot, parent_addr, parent_addr, name)
                 # FIXME: this may only work for one node
