@@ -121,10 +121,10 @@ class VueCharger(udi_interface.Node):
         LOGGER.info('query called')
 
     def set_on(self, cmd):
-        vueAPI.update_charger(self.charger, on=True)
+        self.vueAPI.update_charger(self.charger, on=True)
 
     def set_off(self, cmd):
-        vueAPI.update_charger(self.charger, on=False)
+        self.vueAPI.update_charger(self.charger, on=False)
 
     def set_rate(self, cmd):
         LOGGER.info('TESTING: set rate to :: {}'.format(cmd))
@@ -196,10 +196,10 @@ class VueOutlet(udi_interface.Node):
         LOGGER.info('query called')
 
     def set_on(self, cmd):
-        vueAPI.update_outlet(self.outlet, on=True)
+        self.vueAPI.update_outlet(self.outlet, on=True)
 
     def set_off(self, cmd):
-        vueAPI.update_outlet(self.outlet, on=False)
+        self.vueAPI.update_outlet(self.outlet, on=False)
 
     commands = {
             'QUERY': query,
