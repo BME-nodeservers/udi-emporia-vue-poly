@@ -171,6 +171,7 @@ def discover():
     global ready
 
     info = {}
+    deviceList = []
     devices = vue.get_devices()
 
     for dev in devices:
@@ -243,6 +244,7 @@ if __name__ == "__main__":
 
         polyglot.subscribe(polyglot.CUSTOMPARAMS, parameterHandler)
         polyglot.subscribe(polyglot.POLL, poll)
+        polyglot.subscribe(polyglot.DISCOVER, discover)
         polyglot.ready()
         polyglot.updateProfile()
         polyglot.setCustomParamsDoc()
