@@ -51,6 +51,7 @@ def poll(poll_flag):
         query(pyemvue.enums.Scale.DAY.value, extra=False)
         query(pyemvue.enums.Scale.MONTH.value, extra=False)
 
+# query all device usage info for different scale values
 def query(scale, extra):
     global vue
     global deviceList
@@ -59,10 +60,14 @@ def query(scale, extra):
     usage = vue.get_device_list_usage(deviceList, None, scale=scale,
             unit=pyemvue.enums.Unit.KWH.value)
 
-    #LOGGER.info('Query: get info for {}'.format(deviceList))
-    #for i in usage:
-    #    LOGGER.info('Got usage data for {}'.format(i))
+    update_devices(usage, scale)
 
+    # Update outlet/charger status
+    if extra:
+        query_device_status()
+
+def update_devices(usage, scale):
+    global polyglot
     for gid, device in usage.items():
         # device is class VueUsageDevice. this adds channels dictionary
         LOGGER.debug('Found usage data for {}'.format(gid))
@@ -95,37 +100,53 @@ def query(scale, extra):
             except Exception as e:
                 LOGGER.error('Update of node {} failed for scale {} :: {}'.format(address, scale, e))
 
-    # Update outlet/charger status
-    if extra:
-        outlets, chargers = vue.get_devices_status()
+def update_outlets(outlets):
+    global polyglot
+    for outlet in outlets:
+        try:
+            node = polyglot.getNode(str(outlet.device_gid))
+            if node:
+                LOGGER.debug('Updating status to {}'.format(outlet.outlet_on))
+                node.update_state(outlet.outlet_on)
+            else:
+                LOGGER.error('Node {} (outlet) is missing!'.format(outlet.device_gid))
+        except Exception as e:
+            LOGGER.error('Failed to update {}:: {}'.format(outlet.device_gid, e))
 
-        if outlets:
-            for outlet in outlets:
-                try:
-                    node = polyglot.getNode(str(outlet.device_gid))
-                    if node:
-                        LOGGER.debug('Updating status to {}'.format(outlet.outlet_on))
-                        node.update_state(outlet.outlet_on)
-                    else:
-                        LOGGER.error('Node {} (outlet) is missing!'.format(outlet.device_gid))
-                except Exception as e:
-                    LOGGER.error('Failed to update {}:: {}'.format(outlet.device_gid, e))
-
-        if chargers:
-            for charger in chargers:
-                try:
-                    node = polyglot.getNode(str(charger.device_gid))
-                    if node:
-                        LOGGER.debug('Updating status to {}'.format(charger.charger_on))
-                        node.update_state(charger.charger_on)
-                        node.update_rate(dcharger.charging_rate)
-                        node.update_max_rate(charger.mac_charging_rate)
-                    else:
-                        LOGGER.error('Node {} (charger) is missing!'.format(charger.device_gid))
-                except Exception as e:
-                    LOGGER.error('Failed to update {}:: {}'.format(charger.device_gid, e))
+def update_chargers(chargers):
+    global polyglot
+    for charger in chargers:
+        try:
+            node = polyglot.getNode(str(charger.device_gid))
+            if node:
+                LOGGER.debug('Updating status to {}'.format(charger.charger_on))
+                node.update_state(charger.charger_on)
+                node.update_rate(dcharger.charging_rate)
+                node.update_max_rate(charger.mac_charging_rate)
+            else:
+                LOGGER.error('Node {} (charger) is missing!'.format(charger.device_gid))
+        except Exception as e:
+            LOGGER.error('Failed to update {}:: {}'.format(charger.device_gid, e))
 
 
+# if we want to query a single device, can we call this from a node object?
+def query_device(gid, scale):
+    global vue
+    
+    usage = vue.get_device_list_usage([gid], None, scale=scale,
+            unit=pyemvue.enums.Unit.KWH.value)
+
+    update_devices(usage, scale)
+
+def query_device_status():
+    global vue
+    outlets, chargers = vue.get_devices_status()
+
+    if outlets:
+        update_outlets(outlets)
+
+    if chargers:
+        update_chargers(chargers)
 
 def parameterHandler(params):
     global polyglot
