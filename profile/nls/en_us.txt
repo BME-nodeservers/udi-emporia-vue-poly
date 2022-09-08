@@ -1,8 +1,8 @@
-ND-controller-NAME = emporia VUE
+ND-controller-NAME = emporia VUE Mains
 ND-controler-ICON = EnergyMonitor
-ND-channel-NAME = emporia VUE
+ND-channel-NAME = emporia VUE Channel
 ND-channel-ICON = EnergyMonitor
-ND-ctl-NAME = emporia VUE
+ND-ctl-NAME = emporia VUE what
 ND-ctl-ICON = EnergyMonitor
 CMD-ctl-QUERY-NAME = Query
 CMD-ctl-SET_RATE-NAME = Set
@@ -15,7 +15,7 @@ ST-ctl-GV3-NAME = Monthly KWh
 ST-ctl-GV4-NAME = Charge Rate KW
 ST-ctl-GV5-NAME = Max Charge Rate KW
 
-ND-outlet-NAME = emporia VUE
+ND-outlet-NAME = emporia VUE Outlet
 ND-outlet-ICON = EnergyMonitor
 ST-outlet-ST-NAME = Status
 ST-outlet-CPW-NAME = Killowatts
@@ -23,7 +23,7 @@ ST-outlet-GV1-NAME = Hourly KWh
 ST-outlet-GV2-NAME = Daily KWh
 ST-outlet-GV3-NAME = Monthly KWh
 
-ND-charger-NAME = emporia VUE
+ND-charger-NAME = emporia VUE EV Charger
 ND-charger-ICON = EnergyMonitor
 ST-charger-ST-NAME = Status
 ST-charger-CPW-NAME = Killowatts
