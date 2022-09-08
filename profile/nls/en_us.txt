@@ -2,6 +2,8 @@ ND-controller-NAME = emporia VUE
 ND-controler-ICON = EnergyMonitor
 ND-channel-NAME = emporia VUE
 ND-channel-ICON = EnergyMonitor
+ND-ctl-NAME = emporia VUE
+ND-ctl-ICON = EnergyMonitor
 CMD-ctl-QUERY-NAME = Query
 CMD-ctl-SET_RATE-NAME = Set
 CMDP-rate-SET_RATE-NAME = Charage Rate
@@ -36,5 +38,5 @@ STATUS-0 = Disconnected
 STATUS-1 = Connected
 STATUS-2 = Failed
 
-STATE-0 = On
-STATE-1 = Off
+STATE-0 = Off
+STATE-1 = On

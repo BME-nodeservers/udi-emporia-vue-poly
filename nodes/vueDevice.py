@@ -122,15 +122,18 @@ class VueCharger(udi_interface.Node):
 
     def set_on(self, cmd):
         self.vueAPI.update_charger(self.charger, on=True)
+        self.setDriver('ST', 1, True, False)
 
     def set_off(self, cmd):
         self.vueAPI.update_charger(self.charger, on=False)
+        self.setDriver('ST', 0, True, False)
 
     def set_rate(self, cmd):
         LOGGER.info('TESTING: set rate to :: {}'.format(cmd))
         LOGGER.info(' -- rate = {}'.format(cmd['query']['SET_RATE.uom30']))
         rate = int(cmd['query']['SET_RATE.uom30'])
         self.vueAPI.update_charger(self.charger, charge_rate=rate)
+        self.setDriver('GV4', rate, True, False)
 
     commands = {
             'QUERY': query,
@@ -140,7 +143,7 @@ class VueCharger(udi_interface.Node):
             }
 
     drivers = [
-            {'driver': 'ST', 'value': 1, 'uom': 2},   # charger state
+            {'driver': 'ST', 'value': 1, 'uom': 25},   # charger state
             {'driver': 'CPW', 'value': 0, 'uom': 30},  # power
             {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
             {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
@@ -197,9 +200,11 @@ class VueOutlet(udi_interface.Node):
 
     def set_on(self, cmd):
         self.vueAPI.update_outlet(self.outlet, on=True)
+        self.setDriver('ST', 1, True, False)
 
     def set_off(self, cmd):
         self.vueAPI.update_outlet(self.outlet, on=False)
+        self.setDriver('ST', 0, True, False)
 
     commands = {
             'QUERY': query,
@@ -208,7 +213,7 @@ class VueOutlet(udi_interface.Node):
             }
 
     drivers = [
-            {'driver': 'ST',  'value': 0, 'uom': 2},   # outlet state
+            {'driver': 'ST',  'value': 0, 'uom': 25},  # outlet state
             {'driver': 'CPW', 'value': 0, 'uom': 30},  # power
             {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
             {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
