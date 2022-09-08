@@ -28,8 +28,8 @@ ST-charger-CPW-NAME = Killowatts
 ST-charger-GV1-NAME = Hourly KWh
 ST-charger-GV2-NAME = Daily KWh
 ST-charger-GV3-NAME = Monthly KWh
-ST-charger-GV4-NAME = Charge Rate KW
-ST-charger-GV5-NAME = Max Charge Rate KW
+ST-charger-GV4-NAME = Charge Rate 
+ST-charger-GV5-NAME = Max Charge Rate
 CMD-charger-SET_RATE-NAME = Set
 
 STATUS-0 = Disconnected

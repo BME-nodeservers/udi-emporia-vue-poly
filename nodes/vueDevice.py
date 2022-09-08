@@ -145,8 +145,8 @@ class VueCharger(udi_interface.Node):
             {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
             {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
             {'driver': 'GV3', 'value': 0, 'uom': 33},  # power
-            {'driver': 'GV4', 'value': 0, 'uom': 30},  # power
-            {'driver': 'GV5', 'value': 0, 'uom': 30},  # power
+            {'driver': 'GV4', 'value': 0, 'uom': 1},   # amps
+            {'driver': 'GV5', 'value': 0, 'uom': 1},   # amps
             ]
 
 class VueOutlet(udi_interface.Node):
