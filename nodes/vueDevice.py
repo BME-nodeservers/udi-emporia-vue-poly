@@ -8,17 +8,19 @@ import udi_interface
 import sys
 import time
 from datetime import datetime
+from pyemvue.pyemvue import Scale
 
 LOGGER = udi_interface.LOGGER
 
 class VueDevice(udi_interface.Node):
     id = 'controller'
-    def __init__(self, polyglot, primary, address, name):
+    def __init__(self, polyglot, primary, address, name, querys):
         super(VueDevice, self).__init__(polyglot, primary, address, name)
         self.poly = polyglot
         self.name = name
         self.address = address
         self.primary = primary
+        self.querys = querys
 
     def update_current(self, raw):
         kwh = round(raw * 3600, 4)
@@ -51,6 +53,13 @@ class VueDevice(udi_interface.Node):
 
     def query(self):
         LOGGER.info('query called')
+        # we need to call the main query_device_usage() to get
+        # updated usage data and query_device_status() to get
+        # updated status info
+        self.querys.query_device(self.address, Scale.MONTH.value)
+        self.querys.query_device(self.address, Scale.DAY.value)
+        self.querys.query_device(self.address, Scale.HOUR.value)
+        self.querys.query_device(self.address, Scale.SECOND.value)
 
     commands = {
             'QUERY': query,
@@ -67,7 +76,7 @@ class VueDevice(udi_interface.Node):
     
 class VueCharger(udi_interface.Node):
     id = 'charger'
-    def __init__(self, polyglot, primary, address, name, vue, charger):
+    def __init__(self, polyglot, primary, address, name, vue, charger, querys):
         super(VueCharger, self).__init__(polyglot, primary, address, name)
         self.poly = polyglot
         self.name = name
@@ -75,6 +84,7 @@ class VueCharger(udi_interface.Node):
         self.primary = primary
         self.vueAPI = vue  # so we can set the charger on/off
         self.charger = charger
+        self.querys = querys
 
     def update_current(self, raw):
         kwh = round(raw * 3600, 4)
@@ -119,6 +129,11 @@ class VueCharger(udi_interface.Node):
 
     def query(self):
         LOGGER.info('query called')
+        self.querys.query_device(self.address, Scale.MONTH.value)
+        self.querys.query_device(self.address, Scale.DAY.value)
+        self.querys.query_device(self.address, Scale.HOUR.value)
+        self.querys.query_device(self.address, Scale.SECOND.value)
+        self.querys.query_device_status()
 
     def set_on(self, cmd):
         self.vueAPI.update_charger(self.charger, on=True)
@@ -154,7 +169,7 @@ class VueCharger(udi_interface.Node):
 
 class VueOutlet(udi_interface.Node):
     id = 'outlet'
-    def __init__(self, polyglot, primary, address, name, vue, outlet):
+    def __init__(self, polyglot, primary, address, name, vue, outlet, querys):
         super(VueOutlet, self).__init__(polyglot, primary, address, name)
         self.poly = polyglot
         self.name = name
@@ -162,6 +177,7 @@ class VueOutlet(udi_interface.Node):
         self.primary = primary
         self.vueAPI = vue  # so we can set the charger on/off
         self.outlet = outlet
+        self.querys = querys
 
     def update_current(self, raw):
         kwh = round(raw * 3600, 4)
@@ -197,6 +213,11 @@ class VueOutlet(udi_interface.Node):
 
     def query(self):
         LOGGER.info('query called')
+        self.querys.query_device(self.address, Scale.MONTH.value)
+        self.querys.query_device(self.address, Scale.DAY.value)
+        self.querys.query_device(self.address, Scale.HOUR.value)
+        self.querys.query_device(self.address, Scale.SECOND.value)
+        self.querys.query_device_status()
 
     def set_on(self, cmd):
         self.vueAPI.update_outlet(self.outlet, on=True)
