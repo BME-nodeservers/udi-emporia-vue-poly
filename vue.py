@@ -59,6 +59,10 @@ def query(scale, extra):
     usage = vue.get_device_list_usage(deviceList, None, scale=scale,
             unit=pyemvue.enums.Unit.KWH.value)
 
+    LOGGER.info('Query: get info for {}'.format(deviceList))
+    for i in usage:
+        LOGGER.info('Got usage data for {}'.format(i))
+
     for gid, device in usage.items():
         # device is class VueUsageDevice. this adds channels dictionary
         LOGGER.info('Found usage data for {}'.format(gid))
