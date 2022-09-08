@@ -33,8 +33,8 @@ def poll(poll_flag):
         return
 
     if poll_flag == 'shortPoll':
-        #query(pyemvue.enums.Scale.SECOND.value, extra=True)
-        query(pyemvue.enums.Scale.MINUTE.value, extra=True)
+        query(pyemvue.enums.Scale.SECOND.value, extra=True)
+        #query(pyemvue.enums.Scale.MINUTE.value, extra=True)
 
         if hour_update == 10:
             hour_update = 0
@@ -83,7 +83,7 @@ def query(scale, extra):
                     if scale == pyemvue.enums.Scale.SECOND.value:
                         node.update_current(channel.usage)
                     elif scale == pyemvue.enums.Scale.MINUTE.value:
-                        node.update_current(channel.usage)
+                        node.update_minute(channel.usage)
                     elif scale == pyemvue.enums.Scale.HOUR.value:
                         node.update_hour(channel.usage)
                     elif scale == pyemvue.enums.Scale.DAY.value:
