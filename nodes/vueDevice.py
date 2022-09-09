@@ -145,8 +145,8 @@ class VueCharger(udi_interface.Node):
 
     def set_rate(self, cmd):
         LOGGER.info('TESTING: set rate to :: {}'.format(cmd))
-        LOGGER.info(' -- rate = {}'.format(cmd['query']['SET_RATE.uom30']))
-        rate = int(cmd['query']['SET_RATE.uom30'])
+        LOGGER.info(' -- rate = {}'.format(cmd['query']['SET_RATE.uom1']))
+        rate = int(cmd['query']['SET_RATE.uom1'])
         self.vueAPI.update_charger(self.charger, charge_rate=rate)
         self.setDriver('GV4', rate, True, False)
 
