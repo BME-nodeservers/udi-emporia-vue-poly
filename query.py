@@ -71,6 +71,10 @@ class Query(object):
                 except Exception as e:
                     LOGGER.error('Update of node {} failed for scale {} :: {}'.format(address, scale, e))
 
+                # recurse into nested devices
+                if channel.nested_devices:
+                    self.update_devices(channel.nested_devices, scale)
+
     def update_outlets(self, outlets):
         for outlet in outlets:
             try:
