@@ -6,6 +6,7 @@ Cloud for usage/status data.
 import udi_interface
 import re
 import pyemvue
+from nodes import vueChannel
 
 LOGGER = udi_interface.LOGGER
 
@@ -67,7 +68,14 @@ class Query(object):
                         elif scale == pyemvue.enums.Scale.MONTH.value:
                             node.update_month(channel.usage)
                     else:
-                        LOGGER.error('Node {} is missing!'.format(address))
+                        LOGGER.info('Node {} is missing, attempting to add.'.format(address))
+                        # Add it?
+                        name = channel.name
+                        if name == '' or name == None:
+                            name = 'channel_' + str(channel.channel_num)
+                        child = vueChannel.VueChannel(self.polyglot, str(gid), address, name)
+                        self.polyglot.addNode(child)
+
                 except Exception as e:
                     LOGGER.error('Update of node {} failed for scale {} :: {}'.format(address, scale, e))
 
