@@ -44,7 +44,7 @@ class VueDevice(object):
     def from_json_dictionary(self, js):
 
         """Populate device data from a dictionary extracted from the response json."""
-        LOGGER.error('{}'.format(js))
+        #LOGGER.error('{}'.format(js))
         if 'deviceGid' in js: self.device_gid = js['deviceGid']
         if 'manufacturerDeviceId' in js: self.manufacturer_id = js['manufacturerDeviceId']
         if 'model' in js: self.model = js['model']
@@ -125,7 +125,7 @@ class VueUsageDevice(VueDevice):
         self.channels = {}
 
     def from_json_dictionary(self, js):
-        LOGGER.error('usage: {}'.format(js))
+        #LOGGER.error('usage: {}'.format(js))
         if not js: return self
         if 'deviceGid' in js: self.device_gid = js['deviceGid']
         if 'channelUsages' in js and js['channelUsages']:
