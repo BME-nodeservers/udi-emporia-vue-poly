@@ -102,7 +102,7 @@ class Query(object):
                 if node:
                     LOGGER.debug('Updating status to {}'.format(charger.charger_on))
                     node.update_state(charger.charger_on)
-                    node.update_rate(dcharger.charging_rate)
+                    node.update_rate(charger.charging_rate)
                     node.update_max_rate(charger.mac_charging_rate)
                 else:
                     LOGGER.error('Node {} (charger) is missing!'.format(charger.device_gid))
