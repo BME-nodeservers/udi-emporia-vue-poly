@@ -16,8 +16,8 @@
     "credits": [ {
 	"title": "emporia VUE: a node server for energy meter monitoring",
     	"author": "Bob Paauwe",
-    	"version": "1.0.21",
-    	"date": "September 12, 2022",
+    	"version": "1.0.22",
+    	"date": "September 25, 2022",
     	"source": "https://github.com/BME-nodeservers/udi-emporia-vue-poly",
 	"license": "https://github.com/BME-nodeservers/udi-emporia-vue-poly/LICENSE"
 	} ],
