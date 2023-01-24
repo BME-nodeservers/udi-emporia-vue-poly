@@ -167,11 +167,13 @@ class OutletDevice(object):
     def __init__(self, gid=0, on=False, parentGid=0, parentChannel=0):
         self.device_gid = gid
         self.outlet_on = on
+        self.load_gid = 0
         self.schedules = []
 
     def from_json_dictionary(self, js):
         if 'deviceGid' in js: self.device_gid = js['deviceGid']
         if 'outletOn' in js: self.outlet_on = js['outletOn']
+        if 'loadGid' in js: self.load_gid = js['loadGid']
         # don't have support for schedules yet
         return self
     
@@ -179,6 +181,7 @@ class OutletDevice(object):
         j = {}
         j['deviceGid'] = self.device_gid
         j['outletOn'] = self.outlet_on
+        j['loadGid'] = self.load_gid
         return j
 
 class ChargerDevice(object):
