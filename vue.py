@@ -173,6 +173,14 @@ def discover():
                     polyglot.addNode(child)
 
     querys.devices(deviceList)
+
+    # do initial query to populate all the device values??
+    LOGGER.info('Starting initial querys to populate all device values')
+    querys.query(pyemvue.enums.Scale.SECOND.value, extra=True)
+    querys.query(pyemvue.enums.Scale.HOUR.value, extra=False)
+    querys.query(pyemvue.enums.Scale.DAY.value, extra=False)
+    querys.query(pyemvue.enums.Scale.MONTH.value, extra=False)
+
     ready = True
             
 
