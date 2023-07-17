@@ -187,7 +187,7 @@ def discover():
 if __name__ == "__main__":
     try:
         polyglot = udi_interface.Interface([])
-        polyglot.start('1.0.23')
+        polyglot.start('1.0.24')
 
         polyglot.subscribe(polyglot.CUSTOMPARAMS, parameterHandler)
         polyglot.subscribe(polyglot.POLL, poll)
