@@ -50,10 +50,10 @@ class VueChannel(udi_interface.Node):
             }
 
     drivers = [
-            {'driver': 'CPW', 'value': 0, 'uom': 30},  # power
-            {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
-            {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
-            {'driver': 'GV3', 'value': 0, 'uom': 33},  # power
+            {'driver': 'CPW', 'value': 0, 'uom': 30, 'name': 'Killowatts'},  # power
+            {'driver': 'GV1', 'value': 0, 'uom': 33, 'name': 'Hourly KWh'},  # power
+            {'driver': 'GV2', 'value': 0, 'uom': 33, 'name': 'Daily KWh'},  # power
+            {'driver': 'GV3', 'value': 0, 'uom': 33, 'name': 'Monthly KWh'},  # power
             ]
 
     

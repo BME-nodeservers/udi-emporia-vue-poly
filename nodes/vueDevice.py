@@ -234,9 +234,9 @@ class VueOutlet(udi_interface.Node):
             }
 
     drivers = [
-            {'driver': 'ST',  'value': 0, 'uom': 25},  # outlet state
-            {'driver': 'CPW', 'value': 0, 'uom': 30},  # power
-            {'driver': 'GV1', 'value': 0, 'uom': 33},  # power
-            {'driver': 'GV2', 'value': 0, 'uom': 33},  # power
-            {'driver': 'GV3', 'value': 0, 'uom': 33},  # power
+            {'driver': 'ST',  'value': 0, 'uom': 25, 'name': 'Status'},      # outlet state
+            {'driver': 'CPW', 'value': 0, 'uom': 30, 'name': 'Killowatts'},  # power
+            {'driver': 'GV1', 'value': 0, 'uom': 33, 'name': 'Hourly KWh'},  # power
+            {'driver': 'GV2', 'value': 0, 'uom': 33, 'name': 'Daily KWh'},   # power
+            {'driver': 'GV3', 'value': 0, 'uom': 33, 'name': 'Monthly KWh'}, # power
             ]
