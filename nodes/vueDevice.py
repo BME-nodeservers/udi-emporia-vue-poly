@@ -24,26 +24,26 @@ class VueDevice(udi_interface.Node):
 
     def update_current(self, raw):
         kwh = round(raw * 3600, 4)
-        self.setDriver('CPW', kwh, True, False)
+        self.setDriver('CPW', kwh, True, True)
 
     def update_minute(self, raw):
         kwh = round(raw * 60, 4)
-        self.setDriver('CPW', kwh, True, False)
+        self.setDriver('CPW', kwh, True, True)
 
     def update_hour(self, raw):
         kwh = round(raw, 4)
-        self.setDriver('GV1', kwh, True, False)
+        self.setDriver('GV1', kwh, True, True)
 
     def update_day(self, raw):
         kwh = round(raw, 4)
-        self.setDriver('GV2', kwh, True, False)
+        self.setDriver('GV2', kwh, True, True)
 
     def update_month(self, raw):
         kwh = round(raw, 4)
-        self.setDriver('GV3', kwh, True, False)
+        self.setDriver('GV3', kwh, True, True)
 
     def update_status(self, online):
-        self.setDriver('ST', online, True, False)
+        self.setDriver('ST', online, True, True)
 
     def delete(self):
         LOGGER.info('Removing node server')
