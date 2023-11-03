@@ -13,6 +13,7 @@ LOGGER = udi_interface.LOGGER
 
 class VueChannel(udi_interface.Node):
     id = 'channel'
+    hint = 0x01030501
     def __init__(self, polyglot, primary, address, name):
         super(VueChannel, self).__init__(polyglot, primary, address, name)
         self.poly = polyglot

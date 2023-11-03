@@ -169,6 +169,7 @@ class VueCharger(udi_interface.Node):
 
 class VueOutlet(udi_interface.Node):
     id = 'outlet'
+    hint = 0x01030501
     def __init__(self, polyglot, primary, address, name, vue, outlet, querys):
         super(VueOutlet, self).__init__(polyglot, primary, address, name)
         self.poly = polyglot
