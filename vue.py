@@ -20,6 +20,8 @@ querys = None
 deviceList = []
 ready = False
 hour_update = 0
+username = ''
+password = ''
 
 # UDI interface getValidAddress doesn't seem to work right
 def makeValidAddress(address):
@@ -31,33 +33,47 @@ def makeValidAddress(address):
 def poll(poll_flag):
     global hour_update
     global querys
+    global vue
+    global username
+    global password
 
     if not ready:
         return
 
     if poll_flag == 'shortPoll':
-        querys.query(pyemvue.enums.Scale.SECOND.value, extra=True)
-        #query(pyemvue.enums.Scale.MINUTE.value, extra=True)
+        try:
+            querys.query(pyemvue.enums.Scale.SECOND.value, extra=True)
+            #query(pyemvue.enums.Scale.MINUTE.value, extra=True)
 
-        if hour_update == 10:
-            hour_update = 0
-            querys.query(pyemvue.enums.Scale.HOUR.value, extra=False)
-        else:
-            hour_update = hour_update + 1
+            if hour_update == 10:
+                hour_update = 0
+                querys.query(pyemvue.enums.Scale.HOUR.value, extra=False)
+            else:
+                hour_update = hour_update + 1
+        except Exception as ex:
+            # We may want to re-login when this happens?
+            LOGGER.error('SP query failed: {}'.format(ex))
+            vue.login(username=username, password=password)
 
     else:
         '''
         for longPoll we want to do the same as above, but for the
         different time scales.
         '''
-        #query(pyemvue.enums.Scale.HOUR.value, extra=False)
-        querys.query(pyemvue.enums.Scale.DAY.value, extra=False)
-        querys.query(pyemvue.enums.Scale.MONTH.value, extra=False)
+        try:
+            #query(pyemvue.enums.Scale.HOUR.value, extra=False)
+            querys.query(pyemvue.enums.Scale.DAY.value, extra=False)
+            querys.query(pyemvue.enums.Scale.MONTH.value, extra=False)
+        except Exception as ex:
+            LOGGER.error('LP query failed: {}'.format(ex))
+            vue.login(username=username, password=password)
 
 def parameterHandler(params):
     global polyglot
     global vue
     global querys
+    global username
+    global password
     valid_u = False
     valid_p = False
 
@@ -74,21 +90,28 @@ def parameterHandler(params):
     if not valid_p:
         polyglot.Notices['cfg_p'] = 'Please enter a valid Password'
 
-    if valid_u and valid_p:
+    while valid_u and valid_p:
+        #  Possibly move this to start?
         LOGGER.info('Logging in to Emporia Cloud')
+        username = params['Username']
+        password = params['Password']
         try:
             vue = pyemvue.PyEmVue()
             vue.login(username=params['Username'], password=params['Password'])
             querys = query.Query(polyglot, vue)
             LOGGER.error('querys is type {}'.format(type(querys)))
+
+            # Now that we've logged in, discover devices
+            try:
+                discover()
+                poll('longPoll') # force initial values
+                return  # we're good for now
+            except Exception as e:
+                LOGGER.error('Discovery failed: {}'.format(e))
+                time.sleep(60)
         except Exception as e:
             LOGGER.error('Emporia Cloud connection failed: {}'.format(e))
-
-        try:
-            discover()
-            poll('longPoll') # force initial values
-        except Exception as e:
-            LOGGER.error('Discovery failed: {}'.format(e))
+            time.sleep(60)
 
 '''
 query for the devices on the account and create corresponding nodes. We
